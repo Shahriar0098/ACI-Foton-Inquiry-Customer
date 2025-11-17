@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACI Motors - Field Data Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #8b5cf6; /* New accent color for delivery button */
+            --accent-dark: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --submitted-bg: #f0f9ff;
+            --submitted-border: #bae6fd;
+            --pending-bg: #fffbeb;
+            --pending-border: #fed7aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px; /* Reverted to smaller width */
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--header-bg);
+            border-radius: 16px;
+            color: var(--dark);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--secondary), #059669);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .app-title {
+            text-align: center;
+            margin: 2rem 0 1.5rem;
+            color: var(--dark);
+        }
+
+        .app-title h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .app-title p {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        .controls {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px 18px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px; /* Reverted to smaller width */
+        }
+
+        th {
+            background-color: #f8fafc;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr.not-visited {
+            background-color: var(--pending-bg);
+            border-left: 4px solid var(--pending-border);
+        }
+
+        tr.not-visited td {
+            background-color: var(--pending-bg);
+        }
+
+        tr.submitted {
+            background-color: var(--submitted-bg);
+            border-left: 4px solid var(--submitted-border);
+        }
+
+        tr.submitted td {
+            background-color: var(--submitted-bg);
+        }
+
+        .editable-field {
+            width: 100%;
+            padding: 10px 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .editable-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .readonly-field {
+            width: 100%;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--dark);
+            min-height: 44px; /* Ensure same height as inputs */
+            display: flex;
+            align-items: center;
+        }
+
+        .action-cell {
+            text-align: center;
+            vertical-align: middle;
+            min-width: 180px; /* Space for two buttons */
+        }
+
+        /* Style for multiple buttons in one cell */
+        .action-cell .btn {
+            margin: 4px;
+            width: 160px; /* Give buttons a consistent width */
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary), #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* New button for "Mark Delivered" */
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-submitted, .btn-delivered {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            color: white;
+            cursor: default;
+        }
+
+        .btn-pending {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-pending:hover {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn-processing {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-hot {
+            background: linear-gradient(135deg, #fecaca, #f87171);
+            color: #7f1d1d;
+        }
+
+        .status-warm {
+            background: linear-gradient(135deg, #fed7aa, #fb923c);
+            color: #7c2d12;
+        }
+
+        .status-cold {
+            background: linear-gradient(135deg, #bfdbfe, #60a5fa);
+            color: #1e3a8a;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            background: var(--success);
+        }
+
+        .toast-error {
+            background: var(--danger);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-top: 2rem;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: var(--dark);
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .error-panel {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            color: #7f1d1d;
+        }
+
+        .error-panel h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .debug-info {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .required-field {
+            border-color: #ef4444 !important;
+        }
+
+        .field-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .filter-clear {
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .clear-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .app-title h2 {
+                font-size: 1.8rem;
+            }
+            .filter-section {
+                flex-direction: column;
+            }
+            .filter-group {
+                width: 100%;
+            }
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            .stats-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>ACI Motors</h1>
+                        <p>Foton Portfolio</p>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Sales Officer Portal</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="app-title">
+            <h2>Field Customer Data Collection</h2>
+            <p>Update customer visit information and delivery status in the field</p>
+        </div>
+
+        <!-- Error Panel -->
+        <div id="error-panel" class="error-panel" style="display: none;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Connection Error</h3>
+            <p id="error-message"></p>
+            <div class="debug-info">
+                <p><strong>Troubleshooting Steps:</strong></p>
+                <ol>
+                    <li>Check if your Google Apps Script is deployed (or re-deployed)</li>
+                    <li>Ensure your sheet name is correct in the `Code.gs` file</li>
+                    <li>Verify "Who has access" is set to "Anyone"</li>
+                    <li>Check browser console (F12) for detailed errors</li>
+                </ol>
+                <p id="debug-url" style="margin-top: 10px;"></p>
+                <button id="retry-button" class="btn btn-primary" style="margin-top: 10px;">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value" id="total-customers">0</div>
+                <div class="stat-label">Total Customers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completed-visits">0</div>
+                <div class="stat-label">Completed Visits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pending-visits">0</div>
+                <div class="stat-label">Pending Visits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="hot-customers">0</div>
+                <div class="stat-label">Hot Customers</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="controls">
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="officer-filter">Filter by Officer Name</label>
+                    <select id="officer-filter">
+                        <option value="">All Officers</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="visit-filter">Filter by Visit Status</label>
+                    <select id="visit-filter">
+                        <option value="">All Visits</option>
+                        <option value="Yes">Completed</option>
+                        <option value="No">Not Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="customer-type-filter">Filter by Customer Type</label>
+                    <select id="customer-type-filter">
+                        <option value="">All Types</option>
+                        <option value="Hot">Hot</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Cold">Cold</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-clear">
+                <button id="clear-filters" class="clear-btn">
+                    <i class="fas fa-times"></i> Clear All Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+            <table id="customer-table">
+                <thead>
+                    <tr>
+                        <th>S.L.</th>
+                        <th>Customer No</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Address</th>
+                        <th>Model</th>
+                        <th>Officer Name</th>
+                        <th>Visit Completed (Y/N)</th>
+                        <th>Customer Type</th>
+                        <th>Field Visit Notes</th>
+                        <!-- Removed Delivery Info Column -->
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Data rows will be injected here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Loading / No Data -->
+        <div class="loading" id="loading-indicator">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="no-data" id="no-data-message" style="display: none;">
+            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <h3>No Data Available</h3>
+            <p>No customer data found in the system.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ACI Motors Ltd. Foton. All right reserved</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // SCRIPT_URL: This must be your Google Apps Script Deployment URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0lO2gVKbBYuJ1YVE6SXR0AIX-RXEgnJJa8nfmY1hNJau1FTHwa39SihOHKw8rUm1QHg/exec";
+
+        // DOM Elements
+        const tableBody = document.getElementById('table-body');
+        const officerFilter = document.getElementById('officer-filter');
+        const visitFilter = document.getElementById('visit-filter');
+        const customerTypeFilter = document.getElementById('customer-type-filter');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const toast = document.getElementById('toast');
+        const totalCustomersEl = document.getElementById('total-customers');
+        const completedVisitsEl = document.getElementById('completed-visits');
+        const pendingVisitsEl = document.getElementById('pending-visits');
+        const hotCustomersEl = document.getElementById('hot-customers');
+        const noDataMessage = document.getElementById('no-data-message');
+        const errorPanel = document.getElementById('error-panel');
+        const errorMessage = document.getElementById('error-message');
+        const debugUrl = document.getElementById('debug-url');
+        const retryButton = document.getElementById('retry-button');
+        const clearFiltersBtn = document.getElementById('clear-filters');
+
+        // Data storage
+        let allData = [];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupEventListeners();
+        });
+
+        // Load data from Google Sheets via Apps Script
+        async function loadData() {
+            showLoading(true);
+            hideNoDataMessage();
+            hideErrorPanel();
+            
+            try {
+                // ADDED a cache-busting timestamp to prevent stale data
+                const response = await fetch(`${SCRIPT_URL}?action=getData&t=${new Date().getTime()}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (data.success && Array.isArray(data.data)) {
+                    allData = data.data;
+                    updateStats(allData);
+                    renderTable(allData);
+                    populateOfficerFilter(allData);
+                    
+                    if (allData.length === 0) {
+                        showNoDataMessage();
+                    }
+                } else {
+                    throw new Error(data.error || 'Invalid data format received');
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showErrorPanel('Failed to load data: ' + error.message);
+                showNoDataMessage();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Update statistics
+        function updateStats(data) {
+            if (!data || !Array.isArray(data)) return;
+            
+            // **IMPORTANT**: This key MUST match your sheet header
+            const VISIT_KEY = 'Visit Completed (Y/N)';
+
+            totalCustomersEl.textContent = data.length;
+            completedVisitsEl.textContent = data.filter(item => item[VISIT_KEY] === 'Yes').length;
+            pendingVisitsEl.textContent = data.filter(item => item[VISIT_KEY] !== 'Yes').length;
+            hotCustomersEl.textContent = data.filter(item => item['Customer Type'] === 'Hot').length;
+        }
+
+        // Render table with data
+        function renderTable(data) {
+            if (!data || !Array.isArray(data)) {
+                tableBody.innerHTML = '';
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                showNoDataMessage();
+                return;
+            }
+            
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                const hasOfficer = row['Officer Name'] && row['Officer Name'].trim() !== '';
+                
+                // **IMPORTANT**: These keys MUST match your sheet headers
+                const VISIT_KEY = 'Visit Completed (Y/N)';
+                const TYPE_KEY = 'Customer Type';
+                const NOTES_KEY = 'Field Visit Notes';
+
+                const isCompleted = row[VISIT_KEY] === 'Yes';
+                // Check if all required fields for submission are filled
+                const hasAllData = isCompleted && row[TYPE_KEY] && row[NOTES_KEY];
+                
+                // Determine row status
+                if (hasAllData) {
+                    tr.classList.add('submitted');
+                } else if (hasOfficer && !isCompleted) {
+                    tr.classList.add('not-visited');
+                }
+                
+                tr.innerHTML = `
+                    <td>${row['S.L.'] || ''}</td>
+                    <td>${row['Customer No'] || ''}</td>
+                    <td>${row['Name'] || ''}</td>
+                    <td>${formatDate(row['Date'])}</td>
+                    <td>${row['Address'] || ''}</td>
+                    <td>${row['Model'] || ''}</td>
+                    <td>${row['Officer Name'] || ''}</td>
+                    <td>
+                        ${hasAllData ? 
+                            `<div class="readonly-field">${row[VISIT_KEY] || ''}</div>` : 
+                            `<select class="editable-field visit-completed" data-customer="${row['Customer No']}" required>
+                                <option value="">Select</option>
+                                <option value="Yes" ${row[VISIT_KEY] === 'Yes' ? 'selected' : ''}>Yes</option>
+                                <option value="No" ${row[VISIT_KEY] === 'No' ? 'selected' : ''}>No</option>
+                            </select>`
+                        }
+                    </td>
+                    <td>
+                        ${hasAllData ? 
+                            `<div class="readonly-field">${getCustomerTypeBadge(row[TYPE_KEY])}</div>` : 
+                            `<select class="editable-field customer-type" data-customer="${row['Customer No']}" required>
+                                <option value="">Select</option>
+                                <option value="Hot" ${row[TYPE_KEY] === 'Hot' ? 'selected' : ''}>Hot</option>
+                                <option value="Warm" ${row[TYPE_KEY] === 'Warm' ? 'selected' : ''}>Warm</option>
+                                <option value="Cold" ${row[TYPE_KEY] === 'Cold' ? 'selected' : ''}>Cold</option>
+                            </select>`
+                        }
+                    </td>
+                    <td>
+                        ${hasAllData ? 
+                            `<div class="readonly-field">${row[NOTES_KEY] || ''}</div>` : 
+                            `<textarea class="editable-field field-notes" data-customer="${row['Customer No']}" rows="2" placeholder="Enter visit notes..." required>${row[NOTES_KEY] || ''}</textarea>`
+                        }
+                    </td>
+                    <!-- Removed Delivery Info <td> -->
+                    <td class="action-cell">
+                        ${getActionButtons(row)}
+                    </td>
+                `;
+                
+                tableBody.appendChild(tr);
+                
+                // If row is not submitted, validate fields
+                if (!hasAllData) {
+                    validateRequiredFields(row['Customer No']);
+                }
+            });
+            
+            hideNoDataMessage();
+        }
+
+        // Get customer type badge
+        function getCustomerTypeBadge(customerType) {
+            if (!customerType) return '';
+            const typeClass = customerType.toLowerCase();
+            return `<span class="status-badge status-${typeClass}">${customerType}</span>`;
+        }
+
+        // Get appropriate action buttons
+        function getActionButtons(row) {
+            const customerNo = row['Customer No'];
+            const officerName = row['Officer Name'];
+            const hasOfficer = officerName && officerName.trim() !== '';
+            
+            // Check submission status
+            const VISIT_KEY = 'Visit Completed (Y/N)';
+            const TYPE_KEY = 'Customer Type';
+            const NOTES_KEY = 'Field Visit Notes';
+            const hasAllData = row[VISIT_KEY] === 'Yes' && row[TYPE_KEY] && row[NOTES_KEY];
+
+            // Check delivery status
+            // **CHANGE**: Check if Delivery Info starts with "SOLD"
+            const isDelivered = row['Delivery Info'] && row['Delivery Info'].startsWith('SOLD');
+
+            let submitButtonHtml = '';
+            let deliverButtonHtml = '';
+
+            // --- Logic for Submit Button ---
+            if (hasAllData) {
+                submitButtonHtml = `<button class="btn btn-submitted" disabled>
+                                      <i class="fas fa-check"></i> Submitted
+                                  </button>`;
+            } else if (!hasOfficer) {
+                submitButtonHtml = `<button class="btn btn-processing" disabled>
+                                      <i class="fas fa-cog fa-spin"></i> Processing
+                                  </button>`;
+            } else {
+                submitButtonHtml = `<button class="btn btn-success submit-btn" data-customer="${customerNo}">
+                                      <i class="fas fa-save"></i> Submit
+                                  </button>`;
+            }
+
+            // --- Logic for Deliver Button ---
+            if (isDelivered) {
+                deliverButtonHtml = `<button class="btn btn-delivered" disabled>
+                                        <i class="fas fa-truck-fast"></i> Delivered
+                                     </button>`;
+            } else if (hasAllData) {
+                // Only enable delivery button AFTER visit is submitted
+                deliverButtonHtml = `<button class="btn btn-accent deliver-btn" data-customer="${customerNo}">
+                                        <i class="fas fa-truck"></i> Mark Delivered
+                                     </button>`;
+            } else {
+                // Disabled if visit not submitted
+                deliverButtonHtml = `<button class="btn btn-accent" disabled title="Complete visit submission first">
+                                        <i class="fas fa-truck"></i> Mark Delivered
+                                     </button>`;
+            }
+
+            return submitButtonHtml + deliverButtonHtml;
+        }
+
+        // Populate officer filter dropdown
+        function populateOfficerFilter(data) {
+            if (!data || !Array.isArray(data)) return;
+            
+            const officers = [...new Set(data.map(row => row['Officer Name']).filter(name => name && name.trim() !== ''))];
+            officerFilter.innerHTML = '<option value="">All Officers</option>';
+            
+            officers.forEach(officer => {
+                const option = document.createElement('option');
+                option.value = officer;
+                option.textContent = officer;
+                officerFilter.appendChild(option);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            officerFilter.addEventListener('change', filterTable);
+            visitFilter.addEventListener('change', filterTable);
+            customerTypeFilter.addEventListener('change', filterTable);
+            retryButton.addEventListener('click', loadData);
+            clearFiltersBtn.addEventListener('click', clearFilters);
+            
+            // Use event delegation for buttons
+            document.addEventListener('click', function(e) {
+                // Handle Submit button click
+                const submitButton = e.target.closest('.submit-btn');
+                if (submitButton) {
+                    submitRow(submitButton.dataset.customer);
+                    return; // Stop further execution
+                }
+
+                // Handle Mark Delivered button click
+                const deliverButton = e.target.closest('.deliver-btn');
+                if (deliverButton) {
+                    markDelivered(deliverButton.dataset.customer);
+                    return; // Stop further execution
+                }
+            });
+            
+            // Add input validation for required fields
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('editable-field')) {
+                    validateRequiredFields(e.target.dataset.customer);
+                }
+            });
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            officerFilter.value = '';
+            visitFilter.value = '';
+            customerTypeFilter.value = '';
+            filterTable();
+        }
+
+        // Validate required fields for a specific customer row
+        function validateRequiredFields(customerNo) {
+            const row = document.querySelector(`tr:has([data-customer="${customerNo}"])`);
+            if (!row) return;
+            
+            const visitCompleted = row.querySelector('.visit-completed');
+            const customerType = row.querySelector('.customer-type');
+            const fieldNotes = row.querySelector('.field-notes');
+            const submitBtn = row.querySelector('.submit-btn');
+            
+            if (!visitCompleted || !customerType || !fieldNotes || !submitBtn) return;
+            
+            const allFilled = visitCompleted.value && customerType.value && fieldNotes.value;
+            submitBtn.disabled = !allFilled;
+            
+            // Add/remove required field styling
+            visitCompleted.classList.toggle('required-field', !visitCompleted.value);
+            customerType.classList.toggle('required-field', !customerType.value);
+            fieldNotes.classList.toggle('required-field', !fieldNotes.value);
+        }
+
+        // Filter table based on selected filters
+        function filterTable() {
+            if (!allData || !Array.isArray(allData)) return;
+            
+            const officerValue = officerFilter.value;
+            const visitValue = visitFilter.value;
+            const customerTypeValue = customerTypeFilter.value;
+            
+            let filteredData = allData;
+            
+            if (officerValue) {
+                filteredData = filteredData.filter(row => row['Officer Name'] === officerValue);
+            }
+            
+            if (visitValue) {
+                // **IMPORTANT**: This key MUST match your sheet header
+                const VISIT_KEY = 'Visit Completed (Y/N)';
+                filteredData = filteredData.filter(row => row[VISIT_KEY] === visitValue);
+            }
+            
+            if (customerTypeValue) {
+                filteredData = filteredData.filter(row => row['Customer Type'] === customerTypeValue);
+            }
+            
+            renderTable(filteredData);
+        }
+
+        // Submit row data to Google Sheets
+        async function submitRow(customerNo) {
+            const visitCompleted = document.querySelector(`.visit-completed[data-customer="${customerNo}"]`).value;
+            const customerType = document.querySelector(`.customer-type[data-customer="${customerNo}"]`).value;
+            const fieldNotes = document.querySelector(`.field-notes[data-customer="${customerNo}"]`).value;
+            
+            // Validate required fields
+            if (!visitCompleted || !customerType || !fieldNotes) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+            
+            const submitBtn = document.querySelector(`.submit-btn[data-customer="${customerNo}"]`);
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+            submitBtn.disabled = true;
+            
+            try {
+                // ******** THIS IS THE FIX ********
+                // These keys MUST match your Google Sheet headers EXACTLY.
+                // Your new 'Code.gs' file is now looking for these specific keys.
+                const params = new URLSearchParams({
+                    action: 'updateRow',
+                    customerNo: customerNo,
+                    'Visit Completed (Y/N)': visitCompleted, 
+                    'Customer Type': customerType,
+                    'Field Visit Notes': fieldNotes 
+                });
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Data updated successfully!', 'success');
+                    
+                    // Update local data
+                    const rowIndex = allData.findIndex(row => row['Customer No'] === customerNo);
+                    if (rowIndex !== -1) {
+                        allData[rowIndex]['Visit Completed (Y/N)'] = visitCompleted;
+                        allData[rowIndex]['Customer Type'] = customerType;
+                        allData[rowIndex]['Field Visit Notes'] = fieldNotes;
+                    }
+                    
+                    // Update stats and re-render
+                    updateStats(allData);
+                    filterTable(); // Re-render table while preserving filters
+                } else {
+                    throw new Error(result.error || 'Failed to update data');
+                }
+            } catch (error) {
+                console.error('Error updating data:', error);
+                showToast('Error updating data: ' + error.message, 'error');
+                
+                // Restore button state on error
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Mark row as Delivered
+        async function markDelivered(customerNo) {
+            const deliverBtn = document.querySelector(`.deliver-btn[data-customer="${customerNo}"]`);
+            const originalText = deliverBtn.innerHTML;
+            
+            // Show loading state
+            deliverBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+            deliverBtn.disabled = true;
+
+            // **CHANGE**: No longer need to send a value, the script will generate it.
+            // const deliveryValue = 'Delivered'; 
+
+            try {
+                // These keys MUST match what your 'Code.gs' 'doPost' function expects
+                const params = new URLSearchParams({
+                    action: 'markDelivered',
+                    customerNo: customerNo
+                    // **CHANGE**: Removed 'Delivery Info': deliveryValue
+                });
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Delivery status updated!', 'success');
+                    
+                    // Update local data
+                    const rowIndex = allData.findIndex(row => row['Customer No'] === customerNo);
+                    if (rowIndex !== -1) {
+                        // **CHANGE**: Assume success and update locally so the button changes.
+                        // The script generates the exact text, but "SOLD" is enough for the UI logic.
+                        allData[rowIndex]['Delivery Info'] = 'SOLD'; 
+                    }
+                    
+                    // Re-render table
+                    filterTable();
+                } else {
+                    throw new Error(result.error || 'Failed to update delivery status');
+                }
+            } catch (error) {
+                console.error('Error marking as delivered:', error);
+                showToast('Error updating delivery: ' + error.message, 'error');
+                
+                // Restore button state on error
+                deliverBtn.innerHTML = originalText;
+                deliverBtn.disabled = false;
+            }
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            try {
+                // Handle different date formats from Google Sheets
+                // The new 'doGet' sends dates in ISO format, which new Date() handles perfectly
+                let date = new Date(dateString);
+                
+                if (isNaN(date.getTime())) {
+                    return String(dateString); // Return original string if parsing fails
+                }
+                
+                // Format to dd-Mon-yy (e.g., 16-Nov-25)
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = date.toLocaleString('en', { month: 'short' });
+                const year = date.getFullYear().toString().slice(-2);
+                return `${day}-${month}-${year}`;
+            } catch (e) {
+                return String(dateString); // Fallback
+            }
+        }
+
+        function showLoading(show) {
+            loadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+
+        function showToast(message, type) {
+            toast.textContent = message;
+            toast.className = `toast ${type === 'success' ? 'toast-success' : 'toast-error'}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        function showNoDataMessage() {
+            noDataMessage.style.display = 'block';
+            document.querySelector('.table-container').style.display = 'none';
+        }
+
+        function hideNoDataMessage() {
+            noDataMessage.style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+        }
+
+        function showErrorPanel(message) {
+            errorMessage.textContent = message;
+            debugUrl.textContent = `URL: ${SCRIPT_URL}`;
+            errorPanel.style.display = 'block';
+        }
+
+        function hideErrorPanel() {
+            errorPanel.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
