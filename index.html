@@ -811,7 +811,20 @@
             .stat-value { font-size: 1.3rem; }
             .stat-icon { width: 28px; height: 28px; font-size: 0.8rem; }
             
-            .toolbar { grid-template-columns: 1fr 1fr; }
+            /* Creative Fix for Toolbar Overlap: "Priority Stack" */
+            .toolbar { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 12px;
+            }
+
+            /* Month (1st) and Officer (2nd) get full width for better visibility */
+            .toolbar .filter-group:nth-child(1),
+            .toolbar .filter-group:nth-child(2) {
+                grid-column: span 2;
+            }
+
+            /* Status and Type will automatically share the next row (1fr 1fr) */
+
             .toolbar button { grid-column: span 2; }
             
             /* Action buttons stack on mobile table */
