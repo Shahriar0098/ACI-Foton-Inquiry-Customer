@@ -396,6 +396,8 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            /* Grid safety: prevents flex item from overflowing grid cell */
+            min-width: 0; 
         }
 
         .filter-group label {
@@ -407,6 +409,8 @@
 
         .form-control {
             width: 100%;
+            /* CRITICAL FIX: Ensure input never exceeds parent width */
+            max-width: 100%; 
             padding: 6px 10px;
             border: 1px solid var(--border);
             border-radius: 6px;
@@ -414,6 +418,7 @@
             color: var(--text-main);
             font-size: 0.85rem;
             transition: all 0.2s ease;
+            box-sizing: border-box; /* Ensure padding doesn't add to width */
         }
         
         .form-control:focus {
