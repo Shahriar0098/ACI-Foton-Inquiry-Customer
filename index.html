@@ -458,78 +458,138 @@
             transform: translateY(0);
         }
 
-        /* --- SMART MONTH NAVIGATOR CSS --- */
-        .smart-date-control {
-            display: flex;
-            align-items: center;
+        /* --- MODERN MONTH PICKER STYLES --- */
+        .custom-picker-trigger {
             background: #f8fafc;
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 2px;
-            height: 32px; /* Matches input height */
-            width: 100%;
-            transition: all 0.2s ease;
-            position: relative; /* Context for absolute positioning */
-        }
-        
-        .smart-date-control:hover {
-            border-color: var(--primary);
-            background: #fff;
-        }
-
-        .date-nav-btn {
-            width: 32px;
-            height: 100%;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
+            padding: 0 10px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             cursor: pointer;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: all 0.2s;
-            z-index: 2; /* Ensure buttons are clickable above the overlay */
-        }
-        .date-nav-btn:hover { background: var(--bg-body); color: var(--primary); }
-        
-        /* Wrapper to hold text and hidden input stack */
-        .date-display-wrapper {
-            flex: 1;
-            position: relative; 
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .date-display {
-            text-align: center;
             font-size: 0.85rem;
-            font-weight: 600;
             color: var(--text-main);
             user-select: none;
+        }
+        .custom-picker-trigger:hover {
+            background: white;
+            border-color: var(--primary);
+        }
+        .custom-picker-trigger span {
+            flex: 1;
+            margin-left: 8px;
+        }
+        .custom-picker-trigger .clear-icon {
+            color: #ef4444;
+            padding: 4px;
+            font-size: 0.8em;
+        }
+        .custom-picker-trigger .clear-icon:hover {
+            color: #dc2626;
+        }
+
+        /* MODAL */
+        .picker-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            white-space: nowrap;
-            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
         }
-        
-        .date-display i { font-size: 0.8em; opacity: 0.5; }
+        .picker-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-        /* THE MAGIC: Invisible Native Input overlaid on text */
-        #native-month-trigger {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0; /* Invisible but clickable */
-            cursor: pointer;
-            z-index: 1; /* Sits on top of text */
+        .picker-modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-width: 90vw;
+            padding: 16px;
+            transform: scale(0.95);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .picker-modal-overlay.active .picker-modal {
+            transform: scale(1);
+        }
+
+        .picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .picker-year-nav {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .picker-year-nav:hover { background: var(--bg-body); color: var(--primary); }
+        .picker-year-display {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .picker-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 cols x 3 rows */
+            gap: 8px;
+        }
+        .month-item {
+            padding: 8px 4px;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+        .month-item:hover {
+            background: var(--bg-body);
+            color: var(--primary);
+        }
+        .month-item.selected {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        .month-item.current-month {
+            border: 1px solid var(--primary);
+        }
+
+        .picker-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-text:hover { color: var(--text-main); }
+
 
         /* --- Table Styling --- */
         .table-wrapper {
@@ -950,6 +1010,23 @@
         <div class="blob blob-3"></div>
     </div>
 
+    <!-- MODERN MODAL FOR MONTH PICKER -->
+    <div id="picker-modal-overlay" class="picker-modal-overlay">
+        <div class="picker-modal">
+            <div class="picker-header">
+                <button class="picker-year-nav" id="picker-prev-year"><i class="fas fa-chevron-left"></i></button>
+                <span class="picker-year-display" id="picker-year-display">2025</span>
+                <button class="picker-year-nav" id="picker-next-year"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="picker-grid" id="picker-month-grid">
+                <!-- Month items injected by JS -->
+            </div>
+            <div class="picker-footer">
+                <button class="btn-text" id="picker-clear-btn">Clear / All Time</button>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <div class="header-content">
@@ -1039,30 +1116,14 @@
         <!-- Filter Toolbar -->
         <div class="toolbar">
             <div class="filter-group">
-                <label for="month-filter">Month</label>
+                <label>Month</label>
                 
-                <!-- SMART DATE NAVIGATOR -->
-                <div class="smart-date-control">
-                    <button class="date-nav-btn" id="prev-month-btn"><i class="fas fa-chevron-left"></i></button>
-                    
-                    <div class="date-display-wrapper">
-                        <div class="date-display" id="smart-date-display">
-                            <span id="date-text">All Time</span>
-                            <i class="fas fa-calendar-alt small-icon"></i>
-                        </div>
-                        <!-- Invisible Native Input that triggers the calendar -->
-                        <input type="month" id="native-month-trigger">
-                    </div>
-
-                    <!-- Clear button (only visible when filtered) -->
-                    <button class="date-nav-btn" id="reset-date-btn" style="display: none; color: #ef4444;" title="Clear Filter">
-                        <i class="fas fa-times"></i>
-                    </button>
-
-                    <button class="date-nav-btn" id="next-month-btn"><i class="fas fa-chevron-right"></i></button>
+                <!-- NEW CUSTOM PICKER TRIGGER -->
+                <div class="custom-picker-trigger" id="month-picker-trigger">
+                    <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+                    <span id="trigger-date-text">All Time</span>
+                    <i class="fas fa-times clear-icon" id="trigger-clear-btn" style="display: none;"></i>
                 </div>
-                <!-- Hidden input for logic -->
-                <input type="hidden" id="month-filter">
             </div>
 
             <div class="filter-group">
@@ -1142,22 +1203,26 @@
 
     <script>
         // SCRIPT_URL: Google Apps Script Web App URL
-        // Updated deployment ID provided by user
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFUG8hgNL0Z4EgZCBW2be06AQ-t-Zmup2F51wnePdBAfySdV-N0xw2MKrReBEB3y0G2w/exec";
 
         // Elements
         const tableBody = document.getElementById('table-body');
         
-        // NEW: Smart Date Elements
-        const monthFilterInput = document.getElementById('month-filter');
-        const nativeMonthTrigger = document.getElementById('native-month-trigger');
-        const prevMonthBtn = document.getElementById('prev-month-btn');
-        const nextMonthBtn = document.getElementById('next-month-btn');
-        const resetDateBtn = document.getElementById('reset-date-btn'); 
-        const dateTextEl = document.getElementById('date-text');
-        
-        // Smart Date State
-        let currentFilterDate = null; // null = All Time
+        // --- CUSTOM MONTH PICKER ELEMENTS ---
+        const pickerTrigger = document.getElementById('month-picker-trigger');
+        const triggerText = document.getElementById('trigger-date-text');
+        const triggerClearBtn = document.getElementById('trigger-clear-btn');
+        const pickerModalOverlay = document.getElementById('picker-modal-overlay');
+        const pickerGrid = document.getElementById('picker-month-grid');
+        const pickerYearDisplay = document.getElementById('picker-year-display');
+        const pickerPrevYear = document.getElementById('picker-prev-year');
+        const pickerNextYear = document.getElementById('picker-next-year');
+        const pickerClearBtn = document.getElementById('picker-clear-btn');
+
+        // State for Picker
+        let selectedDate = null; // { year: 2025, month: 0-11 } or null
+        let viewYear = new Date().getFullYear();
+        const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         const officerFilter = document.getElementById('officer-filter');
         const visitFilter = document.getElementById('visit-filter');
@@ -1183,80 +1248,101 @@
         let allData = [];
 
         document.addEventListener('DOMContentLoaded', function() {
-            initSmartDateNav();
+            initMonthPicker();
             loadData();
             setupEventListeners();
         });
 
-        // --- SMART DATE LOGIC ---
-        function initSmartDateNav() {
-            updateDateDisplay();
-            
-            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
-            nextMonthBtn.addEventListener('click', () => changeMonth(1));
-            resetDateBtn.addEventListener('click', resetDateFilter);
-            
-            // Native Picker Interaction
-            nativeMonthTrigger.addEventListener('change', (e) => {
-                if (e.target.value) {
-                    const [y, m] = e.target.value.split('-');
-                    // Create date (Note: month is 0-indexed in JS Date)
-                    currentFilterDate = new Date(parseInt(y), parseInt(m) - 1, 1);
-                    updateDateDisplay();
-                    filterTable();
-                } else {
-                    // User cleared it via picker UI
-                    resetDateFilter();
+        // --- CUSTOM MONTH PICKER LOGIC ---
+        function initMonthPicker() {
+            renderPickerGrid();
+            updatePickerTriggerUI();
+
+            // Open Modal
+            pickerTrigger.addEventListener('click', (e) => {
+                if(e.target === triggerClearBtn) return; // Don't open if clear clicked
+                pickerModalOverlay.classList.add('active');
+                // Reset view to selected year or current year
+                viewYear = selectedDate ? selectedDate.year : new Date().getFullYear();
+                renderPickerGrid();
+            });
+
+            // Close Modal (Overlay Click)
+            pickerModalOverlay.addEventListener('click', (e) => {
+                if (e.target === pickerModalOverlay) {
+                    pickerModalOverlay.classList.remove('active');
                 }
             });
-            
-            // Sync initial state
-            nativeMonthTrigger.value = ""; 
+
+            // Navigate Years
+            pickerPrevYear.addEventListener('click', () => { viewYear--; renderPickerGrid(); });
+            pickerNextYear.addEventListener('click', () => { viewYear++; renderPickerGrid(); });
+
+            // Clear Selection from Modal
+            pickerClearBtn.addEventListener('click', () => {
+                setMonth(null);
+                pickerModalOverlay.classList.remove('active');
+            });
+
+            // Clear Selection from Trigger
+            triggerClearBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                setMonth(null);
+            });
         }
 
-        function changeMonth(step) {
-            if (!currentFilterDate) {
-                // If currently "All Time", start from Today
-                currentFilterDate = new Date();
-            } else {
-                // Move month
-                currentFilterDate.setMonth(currentFilterDate.getMonth() + step);
-            }
-            updateDateDisplay();
-            filterTable(); // Trigger filter
+        function renderPickerGrid() {
+            pickerYearDisplay.textContent = viewYear;
+            pickerGrid.innerHTML = '';
+
+            const today = new Date();
+            const currentMonthIdx = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            monthsShort.forEach((m, idx) => {
+                const el = document.createElement('div');
+                el.className = 'month-item';
+                el.textContent = m;
+                
+                // Highlight Selected
+                if (selectedDate && selectedDate.year === viewYear && selectedDate.month === idx) {
+                    el.classList.add('selected');
+                }
+
+                // Highlight Current Month (Visual aid)
+                if (viewYear === currentYear && idx === currentMonthIdx) {
+                    el.classList.add('current-month');
+                }
+
+                el.addEventListener('click', () => {
+                    setMonth({ year: viewYear, month: idx });
+                    pickerModalOverlay.classList.remove('active');
+                });
+
+                pickerGrid.appendChild(el);
+            });
         }
 
-        function resetDateFilter() {
-            currentFilterDate = null;
-            nativeMonthTrigger.value = ""; // Clear picker
-            updateDateDisplay();
+        function setMonth(dateObj) {
+            selectedDate = dateObj;
+            updatePickerTriggerUI();
             filterTable();
         }
 
-        function updateDateDisplay() {
-            if (!currentFilterDate) {
-                dateTextEl.textContent = "All Time";
-                monthFilterInput.value = ""; // Clear logic value
-                nativeMonthTrigger.value = ""; // Ensure picker matches
-                resetDateBtn.style.display = 'none'; // Hide clear button
+        function updatePickerTriggerUI() {
+            if (selectedDate) {
+                triggerText.textContent = `${monthsShort[selectedDate.month]} ${selectedDate.year}`;
+                triggerText.style.color = 'var(--primary)';
+                triggerText.style.fontWeight = '600';
+                triggerClearBtn.style.display = 'block';
             } else {
-                // Format: Nov 2025
-                const monthName = currentFilterDate.toLocaleString('default', { month: 'short' });
-                const year = currentFilterDate.getFullYear();
-                dateTextEl.textContent = `${monthName} ${year}`;
-                
-                // Set Logic Value YYYY-MM
-                const y = year;
-                const m = String(currentFilterDate.getMonth() + 1).padStart(2, '0');
-                const isoValue = `${y}-${m}`;
-                
-                monthFilterInput.value = isoValue;
-                nativeMonthTrigger.value = isoValue; // Sync picker so when opened it defaults to this date
-                
-                resetDateBtn.style.display = 'flex'; // Show clear button
+                triggerText.textContent = "All Time";
+                triggerText.style.color = 'var(--text-main)';
+                triggerText.style.fontWeight = '400';
+                triggerClearBtn.style.display = 'none';
             }
         }
-        // ------------------------
+        // ---------------------------------
 
         async function loadData(isRefresh = false) {
             showLoading(true);
@@ -1534,7 +1620,8 @@
             
             retryButton.addEventListener('click', () => loadData(false));
             clearFiltersBtn.addEventListener('click', () => {
-                resetDateFilter(); // Clear date
+                // Clear Custom Picker
+                setMonth(null); 
                 officerFilter.value = '';
                 visitFilter.value = '';
                 customerTypeFilter.value = '';
@@ -1649,7 +1736,11 @@
         }
 
         function filterTable() {
-            const m = monthFilterInput.value; // Use the hidden input for logic
+            // FILTER BY SELECTED MONTH OBJECT
+            const m = selectedDate 
+                ? `${selectedDate.year}-${String(selectedDate.month + 1).padStart(2, '0')}` // YYYY-MM
+                : null; // All Time
+
             const o = officerFilter.value;
             const v = visitFilter.value;
             const t = customerTypeFilter.value;
