@@ -916,15 +916,28 @@
             /* --- FIX FOR "LINE BAR" / SCROLLING ISSUE --- */
             /* On mobile, remove the fixed height container. Let the table expand fully. */
             .table-scroll {
-                max-height: none; /* Disable the internal scroll height limit */
-                overflow-y: visible; /* Use the main page scroll instead */
+                max-height: none !important; /* Force disable internal height limit */
+                overflow-y: visible; /* Use main page scroll */
                 padding-bottom: 20px;
+                /* Hide scrollbar UI but keep functionality */
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none;  /* IE */
+            }
+            
+            /* Chrome/Safari Hide Scrollbar */
+            .table-scroll::-webkit-scrollbar { 
+                display: none; 
             }
 
-            /* Disable sticky table headers on mobile to prevent visual glitches */
+            /* Disable sticky headers on mobile to prevent artifacts */
             th {
                 position: static; 
                 box-shadow: none;
+            }
+            
+            /* Unstick main header to give more space */
+            header {
+                position: relative;
             }
         }
     </style>
@@ -1371,7 +1384,8 @@
                     </td>
                     <td>${row['Name'] || ''}</td>
                     <td>${formatDate(row['Date'])}</td>
-                    <td>${row['Address'] || ''}</td>
+                    <!-- Reduced Address Font Size -->
+                    <td style="font-size: 0.75rem; line-height: 1.3;">${row['Address'] || ''}</td>
                     <td>${row['Model'] || ''}</td>
                     <td>${row['Officer Name'] || ''}</td>
                     
