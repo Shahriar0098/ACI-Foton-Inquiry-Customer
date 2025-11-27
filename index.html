@@ -565,6 +565,36 @@
             opacity: 0.5;
         }
 
+        /* --- NEW STATUS BADGES (Simple Ghost Style - No Border) --- */
+        .status-badge {
+            padding: 4px;
+            font-size: 0.9rem; /* Good size for standalone icons */
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            /* Completely transparent/borderless like "Done" */
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .status-badge i.main-icon { font-size: 1em; }
+        
+        .status-badge i.check-icon { 
+            font-size: 0.6em; 
+            margin-left: 1px;
+            opacity: 0.8;
+            font-weight: 900;
+        }
+
+        .status-booked {
+            color: var(--info); /* Cyan Icon */
+        }
+
+        .status-delivered {
+            color: var(--accent); /* Violet Icon */
+        }
+
         /* Action Buttons */
         .action-group {
             display: flex;
@@ -601,19 +631,26 @@
             transform: translateY(-1px);
         }
 
-        .btn-info { background: white; color: var(--info); border-color: var(--border); }
+        /* --- SOFT MODERN ACTION BUTTONS --- */
+        .btn-info { 
+            background: var(--info-light); /* Soft Pastel Background */
+            color: #0891b2; /* Darker, legible text */
+            border: 1px solid rgba(6, 182, 212, 0.1); /* Very subtle border */
+        }
         .btn-info:hover:not(:disabled) { 
-            border-color: var(--info); 
-            background: var(--info-light); 
-            box-shadow: 0 2px 4px rgba(6, 182, 212, 0.1);
+            background: #cffafe; /* Slightly deeper tint on hover */
+            color: #0e7490;
             transform: translateY(-1px);
         }
 
-        .btn-accent { background: white; color: var(--accent); border-color: var(--border); }
+        .btn-accent { 
+            background: var(--accent-light); /* Soft Pastel Background */
+            color: #7c3aed; /* Darker, legible text */
+            border: 1px solid rgba(139, 92, 246, 0.1); 
+        }
         .btn-accent:hover:not(:disabled) { 
-            border-color: var(--accent); 
-            background: var(--accent-light); 
-            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.1);
+            background: #ede9fe; 
+            color: #6d28d9;
             transform: translateY(-1px);
         }
         
@@ -978,30 +1015,67 @@
             setupEventListeners();
         });
 
-        async function loadData() {
+        async function loadData(isRefresh = false) {
             showLoading(true);
             hideNoDataMessage();
             hideErrorPanel();
             
+            // TIMEOUT HANDLER: Stop loading after 15 seconds if stuck
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=getData&t=${new Date().getTime()}`);
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const response = await fetch(`${SCRIPT_URL}?action=getData&t=${new Date().getTime()}`, {
+                    method: 'GET',
+                    redirect: 'follow', // Explicitly follow Google redirects
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId); // Clear timeout if successful
+
+                if (!response.ok) {
+                    throw new Error(`Server Error: ${response.status}`);
+                }
+                
+                // CRITICAL FIX: Check if response is actually JSON. 
+                // If permissions are wrong, Google returns HTML (Login page), causing a crash.
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") === -1) {
+                    throw new Error("Access Denied. Please set Script Deployment access to 'Anyone'.");
+                }
                 
                 const data = await response.json();
+                
                 if (data.success && Array.isArray(data.data)) {
                     allData = data.data;
+                    
                     updateStats(allData);
-                    renderTable(allData);
-                    populateOfficerFilter(allData);
+                    
+                    if (isRefresh) {
+                        filterTable(); 
+                    } else {
+                        renderTable(allData);
+                        populateOfficerFilter(allData);
+                    }
                     
                     if (allData.length === 0) showNoDataMessage();
                 } else {
-                    throw new Error(data.error || 'Invalid data');
+                    throw new Error(data.error || 'Invalid data structure received');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showErrorPanel('Failed to load: ' + error.message);
-                showNoDataMessage();
+                console.error('Fetch Error:', error);
+                
+                let msg = error.message;
+                // Translate technical errors to user-friendly messages
+                if (error.name === 'AbortError') msg = "Connection timed out. Please retry.";
+                if (msg.includes('Unexpected token') || msg.includes('JSON')) msg = "Data Error: Check Script Permissions (Must be 'Anyone')";
+                if (msg.includes('Failed to fetch')) msg = "Network Error: Check internet connection.";
+
+                showErrorPanel(msg);
+                
+                // If it's a refresh, we might still have old data, don't hide it.
+                // If it's first load and failed, show no data message to clear state.
+                if (!isRefresh && allData.length === 0) showNoDataMessage();
             } finally {
                 showLoading(false);
             }
@@ -1144,28 +1218,43 @@
 
             // Submit logic
             if (hasAllData) {
+                // Reverted to simple text
                 btns += `<span class="btn-ghost"><i class="fas fa-check"></i>Done</span>`;
             } else if (!hasOfficer) {
                 btns += `<span class="btn-ghost" style="opacity:0.5">Pending</span>`;
             } else {
-                btns += `<button class="btn btn-primary submit-btn" data-customer="${customerNo}">Submit</button>`;
+                // Added Icon to Submit Button
+                btns += `<button class="btn btn-primary submit-btn" data-customer="${customerNo}">
+                            <i class="fas fa-paper-plane"></i> Submit
+                         </button>`;
             }
 
             // Book logic
-            // UPDATE: Do not show Booked status if already Delivered
             if (isBooked && !isDelivered) {
-                btns += `<span class="btn-ghost" style="color:var(--info)"><i class="fas fa-bookmark"></i> Booked</span>`;
+                // Creative: Soft Minimal Badge (Icon + Tick)
+                btns += `<span class="status-badge status-booked" title="Booked">
+                            <i class="fas fa-bookmark main-icon"></i> 
+                            <i class="fas fa-check check-icon"></i>
+                         </span>`;
             } else if (hasAllData && !isDelivered) {
-                // Text changed to "Booked?"
-                btns += `<button class="btn btn-info book-btn" data-customer="${customerNo}">Booked?</button>`;
+                // Creative: Outline Button for Action + Icon
+                btns += `<button class="btn btn-info book-btn" data-customer="${customerNo}">
+                            <i class="fas fa-bookmark"></i> Booked?
+                         </button>`;
             }
 
             // Deliver logic
             if (isDelivered) {
-                btns += `<span class="btn-ghost" style="color:var(--accent)"><i class="fas fa-truck"></i> Delivered</span>`;
+                // Creative: Soft Minimal Badge (Icon + Tick)
+                btns += `<span class="status-badge status-delivered" title="Delivered">
+                            <i class="fas fa-truck main-icon"></i> 
+                            <i class="fas fa-check check-icon"></i>
+                         </span>`;
             } else if (hasAllData) {
-                // Text changed to "Delivered?"
-                btns += `<button class="btn btn-accent deliver-btn" data-customer="${customerNo}">Delivered?</button>`;
+                // Creative: Outline Button for Action + Icon
+                btns += `<button class="btn btn-accent deliver-btn" data-customer="${customerNo}">
+                            <i class="fas fa-truck"></i> Delivered?
+                         </button>`;
             }
 
             return btns;
@@ -1173,6 +1262,9 @@
 
         function populateOfficerFilter(data) {
             if (!data) return;
+            // Save current selection if exists
+            const currentVal = officerFilter.value;
+            
             const officers = [...new Set(data.map(r => r['Officer Name']).filter(n => n))];
             officerFilter.innerHTML = '<option value="">All</option>';
             officers.forEach(off => {
@@ -1180,6 +1272,11 @@
                 opt.value = opt.textContent = off;
                 officerFilter.appendChild(opt);
             });
+            
+            // Restore selection if it still exists in new data
+            if (currentVal && officers.includes(currentVal)) {
+                officerFilter.value = currentVal;
+            }
         }
 
         function setupEventListeners() {
@@ -1187,7 +1284,7 @@
                 el.addEventListener('change', filterTable)
             );
             
-            retryButton.addEventListener('click', loadData);
+            retryButton.addEventListener('click', () => loadData(false));
             clearFiltersBtn.addEventListener('click', () => {
                 monthFilter.value = '';
                 officerFilter.value = '';
@@ -1356,15 +1453,8 @@
 
                 showToast('Visit Submitted!', 'success');
                 
-                // Update local state
-                const row = allData.find(r => r['Customer No'] === customerNo);
-                if (row) {
-                    row['Visit Completed (Y/N)'] = visit;
-                    row['Customer Type'] = type;
-                    row['Field Visit Notes'] = note;
-                }
-                updateStats(allData);
-                filterTable(); // Re-render to show readonly state
+                // AUTO-REFRESH: Reload data from server
+                loadData(true); 
 
             } catch (err) {
                 console.error(err);
@@ -1391,11 +1481,9 @@
               if (!data.success) throw new Error(data.error);
                 
                 showToast('Status Updated!', 'success');
-                const row = allData.find(r => r['Customer No'] === customerNo);
-                if (row) row[field] = `${prefix} - ${new Date().toISOString()}`;
                 
-                updateStats(allData);
-                filterTable();
+                // AUTO-REFRESH: Reload data from server
+                loadData(true);
 
             } catch (err) {
                 console.error(err);
