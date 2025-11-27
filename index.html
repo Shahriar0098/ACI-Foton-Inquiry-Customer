@@ -458,6 +458,79 @@
             transform: translateY(0);
         }
 
+        /* --- SMART MONTH NAVIGATOR CSS --- */
+        .smart-date-control {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 2px;
+            height: 32px; /* Matches input height */
+            width: 100%;
+            transition: all 0.2s ease;
+            position: relative; /* Context for absolute positioning */
+        }
+        
+        .smart-date-control:hover {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .date-nav-btn {
+            width: 32px;
+            height: 100%;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 2; /* Ensure buttons are clickable above the overlay */
+        }
+        .date-nav-btn:hover { background: var(--bg-body); color: var(--primary); }
+        
+        /* Wrapper to hold text and hidden input stack */
+        .date-display-wrapper {
+            flex: 1;
+            position: relative; 
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-display {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+            width: 100%;
+        }
+        
+        .date-display i { font-size: 0.8em; opacity: 0.5; }
+
+        /* THE MAGIC: Invisible Native Input overlaid on text */
+        #native-month-trigger {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; /* Invisible but clickable */
+            cursor: pointer;
+            z-index: 1; /* Sits on top of text */
+        }
+
         /* --- Table Styling --- */
         .table-wrapper {
             background: var(--bg-card);
@@ -579,42 +652,34 @@
             gap: 4px;
         }
 
+        /* --- NEW STATUS BADGES (Simple Ghost Style - No Border) --- */
         .status-badge {
-            padding: 3px 6px;
-            border-radius: 6px; 
+            padding: 4px;
             font-size: 0.9rem; /* Good size for standalone icons */
             display: inline-flex;
             align-items: center;
             gap: 2px;
-            transition: transform 0.2s ease;
+            /* Completely transparent/borderless like "Done" */
+            background: transparent;
+            border: none;
             cursor: default;
-        }
-        
-        .status-badge:hover {
-            transform: scale(1.1);
         }
 
         .status-badge i.main-icon { font-size: 1em; }
         
         .status-badge i.check-icon { 
             font-size: 0.6em; 
-            margin-left: 2px;
+            margin-left: 1px;
             opacity: 0.8;
             font-weight: 900;
         }
 
-        /* BOOKED: Teal/Cyan Theme */
         .status-booked {
-            color: #06b6d4; /* var(--info) */
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid rgba(6, 182, 212, 0.2);
+            color: var(--info); /* Cyan Icon */
         }
 
-        /* DELIVERED: Violet Theme */
         .status-delivered {
-            color: #8b5cf6; /* var(--accent) */
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--accent); /* Violet Icon */
         }
 
         /* Action Buttons */
@@ -847,16 +912,6 @@
             .form-control {
                 font-size: 16px; /* Prevents iOS zoom */
             }
-
-            /* Robust constraint for Month Input */
-            input[type="month"] {
-                width: 100%;
-                min-width: 0;
-                /* Calculate precise width to avoid touching edges (Viewport - Padding) */
-                max-width: calc(100vw - 48px); 
-                box-sizing: border-box; 
-                background-color: #f8fafc;
-            }
         }
     </style>
 </head>
@@ -958,8 +1013,31 @@
         <div class="toolbar">
             <div class="filter-group">
                 <label for="month-filter">Month</label>
-                <input type="month" id="month-filter" class="form-control">
+                
+                <!-- SMART DATE NAVIGATOR -->
+                <div class="smart-date-control">
+                    <button class="date-nav-btn" id="prev-month-btn"><i class="fas fa-chevron-left"></i></button>
+                    
+                    <div class="date-display-wrapper">
+                        <div class="date-display" id="smart-date-display">
+                            <span id="date-text">All Time</span>
+                            <i class="fas fa-calendar-alt small-icon"></i>
+                        </div>
+                        <!-- Invisible Native Input that triggers the calendar -->
+                        <input type="month" id="native-month-trigger">
+                    </div>
+
+                    <!-- Clear button (only visible when filtered) -->
+                    <button class="date-nav-btn" id="reset-date-btn" style="display: none; color: #ef4444;" title="Clear Filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+
+                    <button class="date-nav-btn" id="next-month-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <!-- Hidden input for logic -->
+                <input type="hidden" id="month-filter">
             </div>
+
             <div class="filter-group">
                 <label for="officer-filter">Officer</label>
                 <select id="officer-filter" class="form-control">
@@ -1042,7 +1120,18 @@
 
         // Elements
         const tableBody = document.getElementById('table-body');
-        const monthFilter = document.getElementById('month-filter');
+        
+        // NEW: Smart Date Elements
+        const monthFilterInput = document.getElementById('month-filter');
+        const nativeMonthTrigger = document.getElementById('native-month-trigger');
+        const prevMonthBtn = document.getElementById('prev-month-btn');
+        const nextMonthBtn = document.getElementById('next-month-btn');
+        const resetDateBtn = document.getElementById('reset-date-btn'); 
+        const dateTextEl = document.getElementById('date-text');
+        
+        // Smart Date State
+        let currentFilterDate = null; // null = All Time
+
         const officerFilter = document.getElementById('officer-filter');
         const visitFilter = document.getElementById('visit-filter');
         const customerTypeFilter = document.getElementById('customer-type-filter');
@@ -1067,9 +1156,80 @@
         let allData = [];
 
         document.addEventListener('DOMContentLoaded', function() {
+            initSmartDateNav();
             loadData();
             setupEventListeners();
         });
+
+        // --- SMART DATE LOGIC ---
+        function initSmartDateNav() {
+            updateDateDisplay();
+            
+            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+            nextMonthBtn.addEventListener('click', () => changeMonth(1));
+            resetDateBtn.addEventListener('click', resetDateFilter);
+            
+            // Native Picker Interaction
+            nativeMonthTrigger.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    const [y, m] = e.target.value.split('-');
+                    // Create date (Note: month is 0-indexed in JS Date)
+                    currentFilterDate = new Date(parseInt(y), parseInt(m) - 1, 1);
+                    updateDateDisplay();
+                    filterTable();
+                } else {
+                    // User cleared it via picker UI
+                    resetDateFilter();
+                }
+            });
+            
+            // Sync initial state
+            nativeMonthTrigger.value = ""; 
+        }
+
+        function changeMonth(step) {
+            if (!currentFilterDate) {
+                // If currently "All Time", start from Today
+                currentFilterDate = new Date();
+            } else {
+                // Move month
+                currentFilterDate.setMonth(currentFilterDate.getMonth() + step);
+            }
+            updateDateDisplay();
+            filterTable(); // Trigger filter
+        }
+
+        function resetDateFilter() {
+            currentFilterDate = null;
+            nativeMonthTrigger.value = ""; // Clear picker
+            updateDateDisplay();
+            filterTable();
+        }
+
+        function updateDateDisplay() {
+            if (!currentFilterDate) {
+                dateTextEl.textContent = "All Time";
+                monthFilterInput.value = ""; // Clear logic value
+                nativeMonthTrigger.value = ""; // Ensure picker matches
+                resetDateBtn.style.display = 'none'; // Hide clear button
+            } else {
+                // Format: Nov 2025
+                const monthName = currentFilterDate.toLocaleString('default', { month: 'short' });
+                const year = currentFilterDate.getFullYear();
+                dateTextEl.textContent = `${monthName} ${year}`;
+                
+                // Set Logic Value YYYY-MM
+                const y = year;
+                const m = String(currentFilterDate.getMonth() + 1).padStart(2, '0');
+                const isoValue = `${y}-${m}`;
+                
+                monthFilterInput.value = isoValue;
+                nativeMonthTrigger.value = isoValue; // Sync picker so when opened it defaults to this date
+                
+                resetDateBtn.style.display = 'flex'; // Show clear button
+            }
+        }
+        // ------------------------
 
         async function loadData(isRefresh = false) {
             showLoading(true);
@@ -1340,13 +1500,13 @@
         }
 
         function setupEventListeners() {
-            [monthFilter, officerFilter, visitFilter, customerTypeFilter].forEach(el => 
+            [officerFilter, visitFilter, customerTypeFilter].forEach(el => 
                 el.addEventListener('change', filterTable)
             );
             
             retryButton.addEventListener('click', () => loadData(false));
             clearFiltersBtn.addEventListener('click', () => {
-                monthFilter.value = '';
+                resetDateFilter(); // Clear date
                 officerFilter.value = '';
                 visitFilter.value = '';
                 customerTypeFilter.value = '';
@@ -1461,7 +1621,7 @@
         }
 
         function filterTable() {
-            const m = monthFilter.value;
+            const m = monthFilterInput.value; // Use the hidden input for logic
             const o = officerFilter.value;
             const v = visitFilter.value;
             const t = customerTypeFilter.value;
