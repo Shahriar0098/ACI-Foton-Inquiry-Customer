@@ -825,6 +825,7 @@
                 /* Ensure the toolbar itself stays within bounds */
                 max-width: 100%;
                 box-sizing: border-box;
+                overflow: hidden; /* Clip any potential overflow */
             }
 
             /* Month (1st) and Officer (2nd) get full width for better visibility */
@@ -840,6 +841,25 @@
             
             /* Action buttons stack on mobile table */
             .action-group { flex-direction: column; }
+
+            /* --- CREATIVE MOBILE INPUT FIXES --- */
+            .form-control {
+                /* Prevents iOS zoom on focus */
+                font-size: 16px; 
+            }
+
+            /* Specifically target the stubborn Month selector */
+            input[type="month"] {
+                /* Use Viewport Width (vw) to guarantee it fits the screen */
+                max-width: 85vw; 
+                min-width: 0;
+                /* Strip native styling that forces fixed widths */
+                -webkit-appearance: none; 
+                appearance: none;
+                /* Ensure padding doesn't break the width */
+                box-sizing: border-box; 
+                background-color: #f8fafc;
+            }
         }
     </style>
 </head>
