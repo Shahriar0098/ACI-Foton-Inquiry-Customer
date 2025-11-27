@@ -411,6 +411,8 @@
             width: 100%;
             /* CRITICAL FIX: Ensure input never exceeds parent width */
             max-width: 100%; 
+            /* Fix for Month Input Overflow: Allow shrinking below default browser width */
+            min-width: 0; 
             padding: 6px 10px;
             border: 1px solid var(--border);
             border-radius: 6px;
@@ -418,7 +420,7 @@
             color: var(--text-main);
             font-size: 0.85rem;
             transition: all 0.2s ease;
-            box-sizing: border-box; /* Ensure padding doesn't add to width */
+            box-sizing: border-box; 
         }
         
         .form-control:focus {
@@ -820,12 +822,16 @@
             .toolbar { 
                 grid-template-columns: 1fr 1fr; 
                 gap: 12px;
+                /* Ensure the toolbar itself stays within bounds */
+                max-width: 100%;
+                box-sizing: border-box;
             }
 
             /* Month (1st) and Officer (2nd) get full width for better visibility */
             .toolbar .filter-group:nth-child(1),
             .toolbar .filter-group:nth-child(2) {
                 grid-column: span 2;
+                width: 100%; /* Force full width */
             }
 
             /* Status and Type will automatically share the next row (1fr 1fr) */
