@@ -818,45 +818,42 @@
             .stat-value { font-size: 1.3rem; }
             .stat-icon { width: 28px; height: 28px; font-size: 0.8rem; }
             
-            /* Creative Fix for Toolbar Overlap: "Priority Stack" */
+            /* CREATIVE FIX: SWITCH TO FLEX STACK 
+               Grid can be stubborn with native inputs. Flexbox forces compliance.
+            */
             .toolbar { 
-                grid-template-columns: 1fr 1fr; 
+                display: flex;
+                flex-direction: column; /* Stack vertically */
                 gap: 12px;
-                /* Ensure the toolbar itself stays within bounds */
-                max-width: 100%;
+                width: 100%;
                 box-sizing: border-box;
-                overflow: hidden; /* Clip any potential overflow */
             }
 
-            /* Month (1st) and Officer (2nd) get full width for better visibility */
-            .toolbar .filter-group:nth-child(1),
-            .toolbar .filter-group:nth-child(2) {
-                grid-column: span 2;
-                width: 100%; /* Force full width */
+            /* All groups take full width for consistent "Form" feel */
+            .toolbar .filter-group {
+                width: 100%;
+                min-width: 0; /* Allow shrinking */
             }
 
-            /* Status and Type will automatically share the next row (1fr 1fr) */
-
-            .toolbar button { grid-column: span 2; }
+            /* Specific styling for the buttons to match */
+            .toolbar button { 
+                width: 100%;
+            }
             
             /* Action buttons stack on mobile table */
             .action-group { flex-direction: column; }
 
             /* --- CREATIVE MOBILE INPUT FIXES --- */
             .form-control {
-                /* Prevents iOS zoom on focus */
-                font-size: 16px; 
+                font-size: 16px; /* Prevents iOS zoom */
             }
 
-            /* Specifically target the stubborn Month selector */
+            /* Robust constraint for Month Input */
             input[type="month"] {
-                /* Use Viewport Width (vw) to guarantee it fits the screen */
-                max-width: 85vw; 
+                width: 100%;
                 min-width: 0;
-                /* Strip native styling that forces fixed widths */
-                -webkit-appearance: none; 
-                appearance: none;
-                /* Ensure padding doesn't break the width */
+                /* Calculate precise width to avoid touching edges (Viewport - Padding) */
+                max-width: calc(100vw - 48px); 
                 box-sizing: border-box; 
                 background-color: #f8fafc;
             }
