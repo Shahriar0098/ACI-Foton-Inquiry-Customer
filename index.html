@@ -36,13 +36,43 @@
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
-        /* --- ANIMATIONS --- */
+        /* --- LIVE ANIMATIONS --- */
+        
+        /* 1. Background Gradient Shift */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
+        /* 2. Shimmer Effect for Cards */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* 3. Subtle Breathing for Cards */
+        @keyframes breathe {
+            0% { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+            50% { box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
+            100% { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        }
+
+        /* 4. Urgent Pulse (for Hot Leads) */
+        @keyframes urgentPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); color: #ef4444; }
+            100% { transform: scale(1); }
+        }
+        
+        /* 5. Heartbeat for Actions (Submit Buttons) */
+        @keyframes heartbeat {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        /* 6. Smooth Fade Up Entrance */
         @keyframes fadeSlideUp {
             from {
                 opacity: 0;
@@ -54,22 +84,11 @@
             }
         }
 
-        @keyframes pulseSoft {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- BACKGROUND BLOBS ANIMATION --- */
+        /* 7. Background Blob Movement */
         @keyframes floatBlob {
             0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 40px) scale(0.95); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
             100% { transform: translate(0, 0) scale(1); }
         }
 
@@ -87,38 +106,37 @@
         .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            mix-blend-mode: multiply;
-            animation: floatBlob 25s infinite ease-in-out;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: floatBlob 20s infinite ease-in-out;
         }
 
         .blob-1 {
-            top: -15%;
-            left: -15%;
-            width: 50vw;
-            height: 50vw;
-            background: #dbeafe; /* Soft Blue */
-            animation-duration: 35s;
+            top: -10%;
+            left: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, #e0f2fe 0%, transparent 70%); /* Soft Blue */
+            animation-duration: 25s;
         }
 
         .blob-2 {
-            bottom: -15%;
-            right: -15%;
-            width: 50vw;
-            height: 50vw;
-            background: #dcfce7; /* Soft Green */
-            animation-duration: 40s;
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, #ecfdf5 0%, transparent 70%); /* Soft Green */
+            animation-duration: 30s;
             animation-delay: -5s;
         }
         
         .blob-3 {
             top: 40%;
-            left: 20%;
+            left: 30%;
             width: 40vw;
             height: 40vw;
-            background: #f3e8ff; /* Soft Purple */
-            animation-duration: 30s;
+            background: radial-gradient(circle, #f5f3ff 0%, transparent 70%); /* Soft Purple */
+            animation-duration: 22s;
             animation-delay: -10s;
         }
 
@@ -131,17 +149,13 @@
 
         body {
             background-color: var(--bg-body);
-            /* Soft Gradient Animation */
-            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #eff6ff, #f8fafc);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            
             color: var(--text-main);
             line-height: 1.5;
             min-height: 100vh;
-            /* Reduced bottom padding to bring footer closer */
             padding-bottom: 10px; 
             font-size: 14px;
+            /* Smooth scrolling for the whole page */
+            scroll-behavior: smooth; 
         }
 
         .container {
@@ -150,18 +164,17 @@
             padding: 0 16px;
         }
 
-        /* --- Compact Glass Header --- */
+        /* --- Header --- */
         header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
             position: sticky;
             top: 0;
             z-index: 100;
             padding: 0.75rem 0;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
         }
 
@@ -174,39 +187,24 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: white;
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .logo:hover .logo-icon {
-            transform: scale(1.05) rotate(5deg);
+            gap: 12px;
+            /* REMOVED FLOAT ANIMATION FROM LOGO */
         }
 
         .logo-text h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 800;
             letter-spacing: -0.02em;
-            color: var(--text-main);
-            line-height: 1.2;
+            color: #059669; /* Emerald Green */
+            line-height: 1.1;
         }
 
         .logo-text p {
             font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .user-pill {
@@ -226,10 +224,10 @@
         
         .user-pill:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
-        /* --- Compact Title --- */
+        /* --- Page Title --- */
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -237,12 +235,8 @@
             margin-bottom: 1rem;
             flex-wrap: wrap;
             gap: 10px;
-            opacity: 0; /* Start hidden for animation */
-            animation: fadeSlideUp 0.6s ease-out forwards;
-        }
-
-        .page-header div {
-            flex: 1;
+            opacity: 0; 
+            animation: fadeSlideUp 0.8s ease-out forwards;
         }
 
         .page-header h2 {
@@ -253,12 +247,7 @@
             line-height: 1.2;
         }
 
-        .page-header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* --- PRO DASHBOARD GRID (Compact & Responsive) --- */
+        /* --- Dashboard Grid with Live Cards --- */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr); 
@@ -267,11 +256,12 @@
         }
 
         .stat-card {
-            background: var(--bg-card);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7); /* Slightly transparent */
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
             padding: 1rem;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            border: 1px solid rgba(226, 232, 240, 0.8);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -280,13 +270,22 @@
             position: relative;
             overflow: hidden;
             min-height: 90px;
-            
-            /* Entrance Animation */
             opacity: 0;
-            animation: fadeSlideUp 0.6s ease-out forwards;
+            animation: fadeSlideUp 0.6s ease-out forwards, breathe 6s infinite ease-in-out;
         }
 
-        /* Staggered Animation Delays */
+        /* Live Shimmer Overlay on Cards */
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 5s infinite linear;
+            pointer-events: none;
+        }
+
+        /* Staggered Load */
         .stat-card:nth-child(1) { animation-delay: 0.1s; }
         .stat-card:nth-child(2) { animation-delay: 0.15s; }
         .stat-card:nth-child(3) { animation-delay: 0.2s; }
@@ -295,27 +294,10 @@
         .stat-card:nth-child(6) { animation-delay: 0.35s; }
 
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
             border-color: var(--primary-light);
-        }
-        
-        /* Subtle shimmer effect on hover */
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
-            transform: skewX(-25deg);
-            transition: 0.5s;
-        }
-        
-        .stat-card:hover::after {
-            left: 150%;
-            transition: 0.7s ease-in-out;
         }
 
         .stat-header {
@@ -328,18 +310,18 @@
         .stat-icon {
             width: 32px;
             height: 32px;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.9rem;
-            background: var(--bg-body);
+            background: rgba(241, 245, 249, 0.8);
             color: var(--text-muted);
-            transition: all 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         .stat-card:hover .stat-icon {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
         }
 
         .stat-value {
@@ -360,24 +342,30 @@
             margin-top: auto;
         }
 
+        /* Hot Leads Pulse Effect */
+        .stat-card.red .stat-value {
+            animation: urgentPulse 3s infinite ease-in-out;
+        }
+
         /* Card Themes */
         .stat-card.blue .stat-icon { background: var(--primary-light); color: var(--primary); }
         .stat-card.green .stat-icon { background: var(--secondary-light); color: var(--secondary); }
         .stat-card.orange .stat-icon { background: #fff7ed; color: #f97316; }
         .stat-card.red .stat-icon { background: #fef2f2; color: #ef4444; }
         
-        .stat-card.booked { background: linear-gradient(to bottom right, #ffffff, var(--info-light)); border-color: var(--info); }
+        .stat-card.booked { background: linear-gradient(135deg, rgba(255,255,255,0.9), var(--info-light)); border-color: #cffafe; }
         .stat-card.booked .stat-icon { background: rgba(255,255,255,0.8); color: var(--info); }
         .stat-card.booked .stat-value { color: var(--info); }
         
-        .stat-card.delivered { background: linear-gradient(to bottom right, #ffffff, var(--accent-light)); border-color: var(--accent); }
+        .stat-card.delivered { background: linear-gradient(135deg, rgba(255,255,255,0.9), var(--accent-light)); border-color: #ede9fe; }
         .stat-card.delivered .stat-icon { background: rgba(255,255,255,0.8); color: var(--accent); }
         .stat-card.delivered .stat-value { color: var(--accent); }
 
-        /* --- Compact Toolbar --- */
+        /* --- Toolbar --- */
         .toolbar {
-            background: var(--bg-card);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             padding: 10px;
             margin-bottom: 1.5rem;
             box-shadow: var(--shadow-sm);
@@ -386,8 +374,6 @@
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 10px;
             align-items: end;
-            
-            /* Animation */
             opacity: 0;
             animation: fadeSlideUp 0.6s ease-out forwards 0.4s;
         }
@@ -396,7 +382,6 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            /* Grid safety: prevents flex item from overflowing grid cell */
             min-width: 0; 
         }
 
@@ -409,9 +394,7 @@
 
         .form-control {
             width: 100%;
-            /* CRITICAL FIX: Ensure input never exceeds parent width */
             max-width: 100%; 
-            /* Fix for Month Input Overflow: Allow shrinking below default browser width */
             min-width: 0; 
             padding: 6px 10px;
             border: 1px solid var(--border);
@@ -448,16 +431,13 @@
         }
 
         .clear-btn:hover { 
-            background: var(--bg-body); 
+            background: #fff; 
             color: var(--text-main); 
             border-color: var(--text-muted);
             transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
         
-        .clear-btn:active {
-            transform: translateY(0);
-        }
-
         /* --- MODERN MONTH PICKER STYLES --- */
         .custom-picker-trigger {
             background: #f8fafc;
@@ -477,6 +457,7 @@
         .custom-picker-trigger:hover {
             background: white;
             border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .custom-picker-trigger span {
             flex: 1;
@@ -548,7 +529,7 @@
 
         .picker-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 cols x 3 rows */
+            grid-template-columns: repeat(4, 1fr); 
             gap: 8px;
         }
         .month-item {
@@ -563,11 +544,13 @@
         .month-item:hover {
             background: var(--bg-body);
             color: var(--primary);
+            transform: scale(1.05);
         }
         .month-item.selected {
             background: var(--primary);
             color: white;
             font-weight: 600;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
         }
         .month-item.current-month {
             border: 1px solid var(--primary);
@@ -593,13 +576,12 @@
 
         /* --- Table Styling --- */
         .table-wrapper {
-            background: var(--bg-card);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             overflow: hidden;
-            
-            /* Animation */
             opacity: 0;
             animation: fadeSlideUp 0.6s ease-out forwards 0.5s;
         }
@@ -648,11 +630,19 @@
         tr:last-child td { border-bottom: none; }
         
         tbody tr {
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
-        tbody tr:nth-child(even) { background-color: #fcfcfc; }
-        tbody tr:hover { background-color: #f1f5f9; }
+        /* Live Row Hover Effect */
+        tbody tr:hover { 
+            background-color: white !important; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: scale(1.002);
+            z-index: 10;
+            position: relative;
+        }
+
+        tbody tr:nth-child(even) { background-color: rgba(252, 252, 252, 0.7); }
 
         tr.not-visited td:first-child { border-left: 3px solid #f59e0b; }
         tr.submitted td:first-child { border-left: 3px solid var(--primary); }
@@ -660,7 +650,7 @@
         /* --- Creative Expandable ID Badge --- */
         .id-badge {
             font-family: 'Courier New', monospace;
-            background: #f1f5f9;
+            background: rgba(241, 245, 249, 0.8);
             color: var(--text-muted);
             padding: 2px 6px;
             border-radius: 12px; /* Pill shape */
@@ -675,8 +665,10 @@
         }
         
         .id-badge:hover {
-            background: #e2e8f0;
-            color: var(--text-main);
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transform: scale(1.05);
         }
 
         /* Expanded State (Pop-out) */
@@ -723,6 +715,11 @@
             background: transparent;
             border: none;
             cursor: default;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .status-badge:hover {
+            transform: scale(1.2);
         }
 
         .status-badge i.main-icon { font-size: 1em; }
@@ -771,11 +768,17 @@
             transform: scale(0.96);
         }
 
-        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary { 
+            background: var(--primary); 
+            color: white; 
+            /* Heartbeat animation for actions */
+            animation: heartbeat 3s infinite ease-in-out;
+        }
         .btn-primary:hover:not(:disabled) { 
             background: var(--primary-dark); 
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+            animation: none; /* Stop pulsing on hover */
         }
 
         /* --- SOFT MODERN ACTION BUTTONS --- */
@@ -787,7 +790,8 @@
         .btn-info:hover:not(:disabled) { 
             background: #cffafe; /* Slightly deeper tint on hover */
             color: #0e7490;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(6, 182, 212, 0.15);
         }
 
         .btn-accent { 
@@ -798,7 +802,8 @@
         .btn-accent:hover:not(:disabled) { 
             background: #ede9fe; 
             color: #6d28d9;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.15);
         }
         
         .btn-ghost { 
@@ -806,7 +811,7 @@
             padding: 4px; font-size: 0.75rem; 
         }
 
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
 
         /* Badges */
         .badge {
@@ -842,6 +847,7 @@
             border-color: var(--primary); 
             outline: none; 
             box-shadow: 0 0 0 2px var(--primary-light);
+            transform: translateY(-1px);
         }
         .input-error { 
             border-color: #ef4444; 
@@ -1031,9 +1037,6 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-truck-pickup"></i>
-                    </div>
                     <div class="logo-text">
                         <h1>ACI Motors Limited</h1>
                         <p>Foton Portfolio</p>
@@ -1066,7 +1069,7 @@
             <div class="stat-card blue">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-value" id="total-customers">0</div>
+                    <div class="stat-value" id="total-customers" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Customers</div>
             </div>
@@ -1074,7 +1077,7 @@
             <div class="stat-card green">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-check"></i></div>
-                    <div class="stat-value" id="completed-visits">0</div>
+                    <div class="stat-value" id="completed-visits" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Visits Done</div>
             </div>
@@ -1082,7 +1085,7 @@
             <div class="stat-card orange">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                    <div class="stat-value" id="pending-visits">0</div>
+                    <div class="stat-value" id="pending-visits" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Pending</div>
             </div>
@@ -1090,7 +1093,7 @@
             <div class="stat-card red">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-fire"></i></div>
-                    <div class="stat-value" id="hot-customers">0</div>
+                    <div class="stat-value" id="hot-customers" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Hot Leads</div>
             </div>
@@ -1099,7 +1102,7 @@
             <div class="stat-card booked">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-bookmark"></i></div>
-                    <div class="stat-value" id="total-booked">0</div>
+                    <div class="stat-value" id="total-booked" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Booked</div>
             </div>
@@ -1107,7 +1110,7 @@
             <div class="stat-card delivered">
                 <div class="stat-header">
                     <div class="stat-icon"><i class="fas fa-truck"></i></div>
-                    <div class="stat-value" id="total-delivered">0</div>
+                    <div class="stat-value" id="total-delivered" data-count="0">0</div>
                 </div>
                 <div class="stat-label">Delivered</div>
             </div>
@@ -1239,6 +1242,12 @@
         const pendingVisitsEl = document.getElementById('pending-visits');
         const hotCustomersEl = document.getElementById('hot-customers');
         
+        // Collection of stat elements for animation
+        const statElements = [
+            totalCustomersEl, totalBookedEl, totalDeliveredEl, 
+            completedVisitsEl, pendingVisitsEl, hotCustomersEl
+        ];
+
         const noDataMessage = document.getElementById('no-data-message');
         const errorPanel = document.getElementById('error-panel');
         const errorMessage = document.getElementById('error-message');
@@ -1252,6 +1261,20 @@
             loadData();
             setupEventListeners();
         });
+
+        // --- LIVE ANIMATED COUNTER ---
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
 
         // --- CUSTOM MONTH PICKER LOGIC ---
         function initMonthPicker() {
@@ -1414,18 +1437,33 @@
             if (!data) return;
             const VISIT_KEY = 'Visit Completed (Y/N)';
             
-            totalCustomersEl.textContent = data.length;
+            // Helper to get count and animate
+            const setStat = (el, val) => {
+                const start = parseInt(el.getAttribute('data-count') || "0");
+                el.setAttribute('data-count', val);
+                animateValue(el, start, val, 1000); // 1s animation
+            };
+
+            setStat(totalCustomersEl, data.length);
             
             // UPDATE: Only count as Booked if active (NOT yet Delivered)
-            totalBookedEl.textContent = data.filter(i => 
+            const bookedCount = data.filter(i => 
                 i['Booking Info']?.toString().startsWith('BOOKED') && 
                 !i['Delivery Info']?.toString().startsWith('SOLD')
             ).length;
+            setStat(totalBookedEl, bookedCount);
 
-            totalDeliveredEl.textContent = data.filter(i => i['Delivery Info']?.toString().startsWith('SOLD')).length;
-            completedVisitsEl.textContent = data.filter(i => i[VISIT_KEY] === 'Yes').length;
-            pendingVisitsEl.textContent = data.filter(i => i[VISIT_KEY] !== 'Yes').length;
-            hotCustomersEl.textContent = data.filter(i => i['Customer Type'] === 'Hot').length;
+            const deliveredCount = data.filter(i => i['Delivery Info']?.toString().startsWith('SOLD')).length;
+            setStat(totalDeliveredEl, deliveredCount);
+
+            const visitDoneCount = data.filter(i => i[VISIT_KEY] === 'Yes').length;
+            setStat(completedVisitsEl, visitDoneCount);
+
+            const visitPendingCount = data.filter(i => i[VISIT_KEY] !== 'Yes').length;
+            setStat(pendingVisitsEl, visitPendingCount);
+
+            const hotCount = data.filter(i => i['Customer Type'] === 'Hot').length;
+            setStat(hotCustomersEl, hotCount);
         }
 
         function renderTable(data) {
