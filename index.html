@@ -11,7 +11,6 @@
 
     <style>
         :root {
-            /* Refined Color Palette */
             --primary: #2563eb;       /* Royal Blue */
             --primary-light: #eff6ff;
             --primary-dark: #1e40af;
@@ -36,7 +35,21 @@
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
-        /* --- ANIMATIONS --- */
+        /* --- GLOBAL & ANIMATIONS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background-color: var(--bg-body);
+            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #eff6ff, #f8fafc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 10px; 
+            font-size: 14px;
+        }
+
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -44,727 +57,225 @@
         }
 
         @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulseSoft {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- BACKGROUND BLOBS ANIMATION --- */
-        @keyframes floatBlob {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 40px) scale(0.95); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            mix-blend-mode: multiply;
-            animation: floatBlob 25s infinite ease-in-out;
-        }
-
-        .blob-1 {
-            top: -15%;
-            left: -15%;
-            width: 50vw;
-            height: 50vw;
-            background: #dbeafe; /* Soft Blue */
-            animation-duration: 35s;
-        }
-
-        .blob-2 {
-            bottom: -15%;
-            right: -15%;
-            width: 50vw;
-            height: 50vw;
-            background: #dcfce7; /* Soft Green */
-            animation-duration: 40s;
-            animation-delay: -5s;
-        }
-        
-        .blob-3 {
-            top: 40%;
-            left: 20%;
-            width: 40vw;
-            height: 40vw;
-            background: #f3e8ff; /* Soft Purple */
-            animation-duration: 30s;
-            animation-delay: -10s;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            /* Soft Gradient Animation */
-            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #eff6ff, #f8fafc);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            
-            color: var(--text-main);
-            line-height: 1.5;
-            min-height: 100vh;
-            /* Reduced bottom padding to bring footer closer */
-            padding-bottom: 10px; 
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-
-        /* --- Compact Glass Header --- */
+        /* --- HEADER --- */
         header {
             background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 0.75rem 0;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+            padding: 0.75rem 0; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);
         }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: white;
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .logo:hover .logo-icon {
-            transform: scale(1.05) rotate(5deg);
-        }
-
-        .logo-text h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-            line-height: 1.2;
-        }
-
-        .logo-text p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        /* Removed .logo-icon styles as they are no longer needed */
+        .logo-text h1 { font-size: 1.1rem; font-weight: 700; color: #15803d; }
+        .logo-text p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
         .user-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-main);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 6px; background: white; padding: 4px 12px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--text-main);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
         }
-        
-        .user-pill:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 
-        /* --- Compact Title --- */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 10px;
-            opacity: 0; /* Start hidden for animation */
-            animation: fadeSlideUp 0.6s ease-out forwards;
-        }
+        /* --- DASHBOARD GRID --- */
+        .page-header { margin-bottom: 1rem; opacity: 0; animation: fadeSlideUp 0.6s ease-out forwards; }
+        .page-header h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
 
-        .page-header div {
-            flex: 1;
-        }
-
-        .page-header h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: -0.025em;
-            line-height: 1.2;
-        }
-
-        .page-header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* --- PRO DASHBOARD GRID (Compact & Responsive) --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr); 
-            gap: 12px;
-            margin-bottom: 1.5rem;
-        }
-
+        .dashboard-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 1.5rem; }
         .stat-card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            min-height: 90px;
-            
-            /* Entrance Animation */
-            opacity: 0;
-            animation: fadeSlideUp 0.6s ease-out forwards;
+            background: var(--bg-card); border-radius: 10px; padding: 1rem; box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between;
+            height: 100%; transition: all 0.3s; position: relative; overflow: hidden; min-height: 90px;
+            opacity: 0; animation: fadeSlideUp 0.6s ease-out forwards;
         }
-
-        /* Staggered Animation Delays */
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.15s; }
-        .stat-card:nth-child(3) { animation-delay: 0.2s; }
-        .stat-card:nth-child(4) { animation-delay: 0.25s; }
-        .stat-card:nth-child(5) { animation-delay: 0.3s; }
-        .stat-card:nth-child(6) { animation-delay: 0.35s; }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            border-color: var(--primary-light);
-        }
-        
-        /* Subtle shimmer effect on hover */
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
         .stat-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
-            transform: skewX(-25deg);
-            transition: 0.5s;
+            transform: skewX(-25deg); transition: 0.5s;
         }
+        .stat-card:hover::after { left: 150%; transition: 0.7s; }
         
-        .stat-card:hover::after {
-            left: 150%;
-            transition: 0.7s ease-in-out;
-        }
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .stat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: var(--bg-body); color: var(--text-muted); }
+        .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: auto; }
 
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .stat-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            background: var(--bg-body);
-            color: var(--text-muted);
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover .stat-icon {
-            transform: scale(1.1);
-        }
-
-        .stat-value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--text-main);
-            line-height: 1;
-            letter-spacing: -0.03em;
-            transition: color 0.3s ease;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            margin-top: auto;
-        }
-
-        /* Card Themes */
+        /* Card Colors */
         .stat-card.blue .stat-icon { background: var(--primary-light); color: var(--primary); }
         .stat-card.green .stat-icon { background: var(--secondary-light); color: var(--secondary); }
         .stat-card.orange .stat-icon { background: #fff7ed; color: #f97316; }
         .stat-card.red .stat-icon { background: #fef2f2; color: #ef4444; }
-        
-        .stat-card.booked { background: linear-gradient(to bottom right, #ffffff, var(--info-light)); border-color: var(--info); }
-        .stat-card.booked .stat-icon { background: rgba(255,255,255,0.8); color: var(--info); }
+        .stat-card.booked .stat-icon { background: white; color: var(--info); }
+        .stat-card.booked { background: linear-gradient(to bottom right, #fff, var(--info-light)); border-color: var(--info); }
         .stat-card.booked .stat-value { color: var(--info); }
-        
-        .stat-card.delivered { background: linear-gradient(to bottom right, #ffffff, var(--accent-light)); border-color: var(--accent); }
-        .stat-card.delivered .stat-icon { background: rgba(255,255,255,0.8); color: var(--accent); }
+        .stat-card.delivered .stat-icon { background: white; color: var(--accent); }
+        .stat-card.delivered { background: linear-gradient(to bottom right, #fff, var(--accent-light)); border-color: var(--accent); }
         .stat-card.delivered .stat-value { color: var(--accent); }
 
-        /* --- Compact Toolbar --- */
+        /* --- TOOLBAR --- */
         .toolbar {
-            background: var(--bg-card);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            align-items: end;
-            
-            /* Animation */
-            opacity: 0;
-            animation: fadeSlideUp 0.6s ease-out forwards 0.4s;
+            background: var(--bg-card); border-radius: 10px; padding: 10px; margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; align-items: end;
+            opacity: 0; animation: fadeSlideUp 0.6s ease-out forwards 0.4s;
         }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-group label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+        .form-control { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background-color: #f8fafc; font-size: 0.85rem; }
+        .clear-btn { padding: 6px 12px; background: transparent; border: 1px dashed var(--border); color: var(--text-muted); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; height: 32px; display: flex; align-items: center; justify-content: center; }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .filter-group label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 6px 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background-color: #f8fafc;
-            color: var(--text-main);
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: #fff;
-            box-shadow: 0 0 0 3px var(--primary-light);
-            transform: translateY(-1px);
-        }
-
-        .clear-btn {
-            padding: 6px 12px;
-            background: transparent;
-            border: 1px dashed var(--border);
-            color: var(--text-muted);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.75rem;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .clear-btn:hover { 
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            border-color: var(--text-muted);
-            transform: translateY(-1px);
-        }
-        
-        .clear-btn:active {
-            transform: translateY(0);
-        }
-
-        /* --- Table Styling --- */
+        /* --- TABLE --- */
         .table-wrapper {
-            background: var(--bg-card);
-            border-radius: 10px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            
-            /* Animation */
-            opacity: 0;
-            animation: fadeSlideUp 0.6s ease-out forwards 0.5s;
+            background: var(--bg-card); border-radius: 10px; box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border); overflow: hidden; opacity: 0; animation: fadeSlideUp 0.6s ease-out forwards 0.5s;
         }
-
-        .table-scroll {
-            overflow-x: auto;
-            /* Update: Added max-height and y-scroll for sticky header support */
-            overflow-y: auto;
-            max-height: 70vh; 
-            /* Ensure dropdowns/popups aren't clipped */
-            padding-bottom: 60px; 
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th {
-            background: #f1f5f9;
-            padding: 0.8rem 0.5rem; 
-            text-align: left;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            /* FREEZE HEADER LOGIC */
-            position: sticky;
-            top: 0;
-            z-index: 20; /* Keep above content */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow line */
-        }
-
-        td {
-            padding: 0.8rem 0.5rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.85rem;
-            color: var(--text-main);
-            vertical-align: middle;
-            transition: background-color 0.2s;
-            position: relative; /* Critical for absolute positioning of ID */
-        }
-
-        tr:last-child td { border-bottom: none; }
+        .table-scroll { overflow-x: auto; overflow-y: auto; max-height: 70vh; padding-bottom: 60px; }
         
-        tbody tr {
-            transition: background-color 0.2s ease;
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th {
+            background: #f1f5f9; padding: 0.8rem 0.5rem; text-align: left; font-size: 0.7rem; font-weight: 700; 
+            text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 20; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-
-        tbody tr:nth-child(even) { background-color: #fcfcfc; }
-        tbody tr:hover { background-color: #f1f5f9; }
-
+        td { padding: 0.8rem 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; position: relative; }
+        tr:hover { background-color: #f8fafc; }
+        
         tr.not-visited td:first-child { border-left: 3px solid #f59e0b; }
         tr.submitted td:first-child { border-left: 3px solid var(--primary); }
 
-        /* --- Creative Expandable ID Badge --- */
-        .id-badge {
-            font-family: 'Courier New', monospace;
-            background: #f1f5f9;
-            color: var(--text-muted);
-            padding: 2px 6px;
-            border-radius: 12px; /* Pill shape */
-            font-size: 0.7rem;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            white-space: nowrap;
-            user-select: none;
-        }
-        
-        .id-badge:hover {
-            background: #e2e8f0;
-            color: var(--text-main);
+        /* --- CREATIVE COMPACT PHONE PILL --- */
+        td.phone-cell {
+            position: relative;
+            /* Allow the pill to expand outside the cell boundaries */
+            overflow: visible; 
+            width: 60px; /* Force small column width */
         }
 
-        /* Expanded State (Pop-out) */
-        .id-badge.expanded {
-            position: absolute;
-            top: 50%;
-            left: 4px;
-            transform: translateY(-50%) scale(1.1);
-            z-index: 50;
-            width: auto;
-            min-width: 120px; /* Make sure full ID fits */
-            background: #ffffff;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            font-weight: 700;
-            padding: 6px 12px;
-        }
-        
-        .id-badge.expanded::after {
-            content: '\f0c5'; /* FontAwesome Copy Icon */
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            margin-left: 8px;
-            font-size: 0.8em;
-            opacity: 0.5;
+        .phone-pill-wrapper {
+            position: relative;
+            width: 36px;
+            height: 36px;
         }
 
-        /* Action Buttons */
-        .action-group {
+        .phone-pill {
+            /* Default: Circle state */
             display: flex;
-            gap: 6px;
-        }
-        
-        @media (max-width: 1024px) {
-            .action-group { flex-direction: column; }
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px; /* Circle */
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy spring effect */
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
         }
 
-        .btn {
-            display: inline-flex;
+        /* The Link/Icon part */
+        .phone-pill a.call-link {
+            width: 36px;
+            height: 36px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
+            color: white;
+            text-decoration: none;
+            flex-shrink: 0; /* Keep circle shape */
+        }
+        
+        .phone-pill a.call-link i { font-size: 0.9rem; }
+
+        /* The Content part (Number + Copy) */
+        .phone-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            max-width: 0;
+            padding-right: 0;
+            transition: all 0.3s ease;
             white-space: nowrap;
         }
-        
-        .btn:active {
-            transform: scale(0.96);
+
+        /* Hover State */
+        .phone-pill:hover {
+            width: auto; /* Expand */
+            padding-right: 12px;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+            z-index: 100; /* Pop over other cells */
         }
 
+        .phone-pill:hover .phone-content {
+            opacity: 1;
+            max-width: 200px; /* Reveal content */
+            padding-left: 0;
+        }
+
+        /* Text Styling */
+        .phone-display {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+        }
+
+        .copy-trigger {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background 0.2s;
+        }
+        .copy-trigger:hover { background: rgba(255,255,255,0.4); }
+
+        /* --- INPUTS & ACTIONS --- */
+        .action-group { display: flex; gap: 6px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover:not(:disabled) { 
-            background: var(--primary-dark); 
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-            transform: translateY(-1px);
-        }
-
         .btn-info { background: white; color: var(--info); border-color: var(--border); }
-        .btn-info:hover:not(:disabled) { 
-            border-color: var(--info); 
-            background: var(--info-light); 
-            box-shadow: 0 2px 4px rgba(6, 182, 212, 0.1);
-            transform: translateY(-1px);
-        }
-
         .btn-accent { background: white; color: var(--accent); border-color: var(--border); }
-        .btn-accent:hover:not(:disabled) { 
-            border-color: var(--accent); 
-            background: var(--accent-light); 
-            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.1);
-            transform: translateY(-1px);
-        }
-        
-        .btn-ghost { 
-            background: transparent; color: var(--text-muted); cursor: default; 
-            padding: 4px; font-size: 0.75rem; 
-        }
-
+        .btn-ghost { background: transparent; color: var(--text-muted); cursor: default; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Badges */
-        .badge {
-            padding: 2px 8px; border-radius: 4px;
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            display: inline-block;
-            transition: transform 0.2s;
-        }
         
-        .badge:hover {
-            transform: scale(1.05);
-        }
-        
+        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-yes { background: #ecfdf5; color: #059669; }
         .badge-hot { background: #fef2f2; color: #ef4444; }
         .badge-warm { background: #fff7ed; color: #f97316; }
         .badge-cold { background: #eff6ff; color: #3b82f6; }
-        .badge-yes { background: #ecfdf5; color: #059669; }
 
-        /* Inline Inputs */
-        .input-inline {
-            width: 100%; 
-            padding: 6px 2px; /* Reduced side padding for space saving */
-            min-height: 32px; 
-            border: 1px solid var(--border); 
-            border-radius: 4px;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
-            background-color: #ffffff;
-            color: var(--text-main);
-            text-overflow: ellipsis; /* Handle overflow gracefully */
-        }
-        .input-inline:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            box-shadow: 0 0 0 2px var(--primary-light);
-        }
-        .input-error { 
-            border-color: #ef4444; 
-            background: #fff1f2; 
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-        }
-        
-        /* --- AUTO-GROWING CREATIVE NOTES BOX --- */
-        textarea.field-notes {
-            resize: none;
-            overflow: hidden;
-            min-height: 36px;
-            line-height: 1.5;
-            font-family: inherit;
-            /* Smooth transitions for interactions */
-            transition: min-height 0.15s ease-out, box-shadow 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-        }
+        .input-inline { width: 100%; padding: 6px 2px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.8rem; }
+        textarea.field-notes { min-height: 36px; resize: none; overflow: hidden; transition: 0.2s; }
+        textarea.field-notes:focus { min-height: 60px; border-color: var(--primary); }
 
-        textarea.field-notes:focus {
-            min-height: 60px; /* Expands immediately on click */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05);
-            border-color: var(--primary);
-            transform: scale(1.02); /* Subtle pop effect */
-            z-index: 10;
-            position: relative;
-        }
-
-        
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-2px, 0, 0); }
-            40%, 60% { transform: translate3d(2px, 0, 0); }
-        }
-
-        /* --- Utilities --- */
+        /* Utils */
         .loading { padding: 3rem; text-align: center; }
-        .loading i { animation: spin 1s linear infinite; }
-        
-        .no-data { 
-            padding: 3rem; text-align: center; color: var(--text-muted); 
-            background: white; border-radius: 10px; border: 1px solid var(--border); 
-            animation: fadeSlideUp 0.4s ease-out;
-        }
-        
-        .error-box { 
-            background: #fef2f2; color: #991b1b; padding: 0.75rem 1rem; 
-            border-radius: 8px; border: 1px solid #fee2e2; margin-bottom: 1rem; 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-size: 0.85rem;
-            animation: fadeSlideUp 0.3s ease-out;
-        }
-
-        /* Updated Compact Footer */
-        footer { 
-            text-align: center; 
-            margin-top: 0.5rem; 
-            color: var(--text-muted); 
-            font-size: 0.65rem; 
-            opacity: 0.8;
-        }
-
-        .toast {
-            position: fixed; bottom: 20px; right: 20px;
-            background: #1e293b; color: white;
-            padding: 10px 16px; border-radius: 8px;
-            font-weight: 500; font-size: 0.85rem;
-            box-shadow: var(--shadow-md);
-            transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000; display: flex; align-items: center; gap: 8px;
-        }
+        .no-data { padding: 3rem; text-align: center; background: white; border-radius: 10px; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: white; padding: 10px 16px; border-radius: 8px; z-index: 1000; transform: translateY(150%); transition: transform 0.3s; }
         .toast.show { transform: translateY(0); }
         .toast.success { background: var(--secondary); }
         .toast.error { background: #ef4444; }
 
-        /* --- RESPONSIVE LOGIC --- */
-        @media (max-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(3, 1fr); /* 2 rows of 3 */
-            }
-        }
-
-        @media (max-width: 640px) {
-            .container { padding: 0 12px; }
-            
-            .header-content { flex-direction: row; gap: 10px; }
-            .user-pill span { display: none; } /* Hide text on mobile */
-            
-            .page-header { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .page-header h2 { font-size: 1.2rem; }
-            
-            /* Mobile Grid: 2 columns */
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .stat-card { min-height: 80px; padding: 0.75rem; }
-            .stat-value { font-size: 1.3rem; }
-            .stat-icon { width: 28px; height: 28px; font-size: 0.8rem; }
-            
-            .toolbar { grid-template-columns: 1fr 1fr; }
-            .toolbar button { grid-column: span 2; }
-            
-            /* Action buttons stack on mobile table */
-            .action-group { flex-direction: column; }
-        }
+        @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: repeat(3, 1fr); } .action-group { flex-direction: column; } }
+        @media (max-width: 640px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } .user-pill span { display: none; } .toolbar { grid-template-columns: 1fr 1fr; } .toolbar button { grid-column: span 2; } }
     </style>
 </head>
 <body>
@@ -779,18 +290,10 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-truck-pickup"></i>
-                    </div>
-                    <div class="logo-text">
-                        <h1>ACI Motors Limited</h1>
-                        <p>Foton Portfolio</p>
-                    </div>
+                    <!-- Logo Icon Removed -->
+                    <div class="logo-text"><h1>ACI Motors Limited</h1><p>Foton Portfolio</p></div>
                 </div>
-                <div class="user-pill">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Officer</span>
-                </div>
+                <div class="user-pill"><i class="fas fa-user-circle"></i><span>Officer</span></div>
             </div>
         </div>
     </header>
@@ -798,156 +301,84 @@
     <main class="container">
         
         <div class="page-header">
-            <div>
-                <h2>Dashboard</h2>
-            </div>
+            <div><h2>Dashboard</h2></div>
         </div>
 
-        <div id="error-panel" class="error-box" style="display: none;">
-            <div><i class="fas fa-wifi"></i> <span id="error-message">Connection Error</span></div>
-            <button id="retry-button" class="btn btn-primary" style="padding: 2px 8px; font-size: 0.7rem;">Retry</button>
+        <div id="error-panel" class="error-box" style="display: none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:6px; margin-bottom:10px;">
+            <span id="error-message">Error</span> <button id="retry-button" class="btn btn-primary" style="padding:2px 8px;">Retry</button>
         </div>
 
-        <!-- COMPACT PRO DASHBOARD GRID -->
         <div class="dashboard-grid">
-            <!-- Operational Stats -->
             <div class="stat-card blue">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-value" id="total-customers">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="total-customers">0</div></div>
                 <div class="stat-label">Customers</div>
             </div>
-            
             <div class="stat-card green">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-check"></i></div>
-                    <div class="stat-value" id="completed-visits">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-check"></i></div><div class="stat-value" id="completed-visits">0</div></div>
                 <div class="stat-label">Visits Done</div>
             </div>
-            
             <div class="stat-card orange">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                    <div class="stat-value" id="pending-visits">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value" id="pending-visits">0</div></div>
                 <div class="stat-label">Pending</div>
             </div>
-            
             <div class="stat-card red">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-fire"></i></div>
-                    <div class="stat-value" id="hot-customers">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-fire"></i></div><div class="stat-value" id="hot-customers">0</div></div>
                 <div class="stat-label">Hot Leads</div>
             </div>
-            
-            <!-- Key Outcomes (Highlighted) -->
             <div class="stat-card booked">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-bookmark"></i></div>
-                    <div class="stat-value" id="total-booked">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-bookmark"></i></div><div class="stat-value" id="total-booked">0</div></div>
                 <div class="stat-label">Booked</div>
             </div>
-            
             <div class="stat-card delivered">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-truck"></i></div>
-                    <div class="stat-value" id="total-delivered">0</div>
-                </div>
+                <div class="stat-header"><div class="stat-icon"><i class="fas fa-truck"></i></div><div class="stat-value" id="total-delivered">0</div></div>
                 <div class="stat-label">Delivered</div>
             </div>
         </div>
 
-        <!-- Filter Toolbar -->
         <div class="toolbar">
-            <div class="filter-group">
-                <label for="month-filter">Month</label>
-                <input type="month" id="month-filter" class="form-control">
-            </div>
-            <div class="filter-group">
-                <label for="officer-filter">Officer</label>
-                <select id="officer-filter" class="form-control">
-                    <option value="">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="visit-filter">Status</label>
-                <select id="visit-filter" class="form-control">
-                    <option value="">All</option>
-                    <option value="Yes">Done</option>
-                    <option value="No">Pending</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="customer-type-filter">Type</label>
-                <select id="customer-type-filter" class="form-control">
-                    <option value="">All</option>
-                    <option value="Hot">Hot</option>
-                    <option value="Warm">Warm</option>
-                    <option value="Cold">Cold</option>
-                </select>
-            </div>
+            <div class="filter-group"><label>Month</label><input type="month" id="month-filter" class="form-control"></div>
+            <div class="filter-group"><label>Officer</label><select id="officer-filter" class="form-control"><option value="">All</option></select></div>
+            <div class="filter-group"><label>Status</label><select id="visit-filter" class="form-control"><option value="">All</option><option value="Yes">Done</option><option value="No">Pending</option></select></div>
+            <div class="filter-group"><label>Type</label><select id="customer-type-filter" class="form-control"><option value="">All</option><option value="Hot">Hot</option><option value="Warm">Warm</option><option value="Cold">Cold</option></select></div>
             <button id="clear-filters" class="clear-btn">Clear Filters</button>
         </div>
 
-        <!-- Table -->
         <div class="table-wrapper">
             <div class="table-scroll">
                 <table id="customer-table">
                     <thead>
                         <tr>
                             <th width="40">#</th>
-                            <th width="50">ID</th> 
+                            <th width="60">Contact</th> <!-- REDUCED WIDTH -->
                             <th>Name</th>
                             <th>Date</th>
                             <th>Address</th>
                             <th>Model</th>
                             <th>Officer</th>
-                             <!-- Space Saving Widths applied here -->
-                            <th width="75" style="min-width: 75px;">Visit</th>
-                            <th width="75" style="min-width: 75px;">Type</th>
+                            <th width="75">Visit</th>
+                            <th width="75">Type</th>
                             <th>Notes</th>
                             <th width="140">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        <!-- JS Injection -->
+                        <!-- Content -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- States -->
-        <div class="loading" id="loading-indicator">
-            <i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--border);"></i>
-        </div>
-
-        <div class="no-data" id="no-data-message" style="display: none;">
-            <p>No records found.</p>
-        </div>
+        <div class="loading" id="loading-indicator"><i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--border);"></i></div>
+        <div class="no-data" id="no-data-message" style="display: none;"><p>No records found.</p></div>
 
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 ACI Motors Ltd.</p>
-        </div>
-    </footer>
-
-    <div class="toast" id="toast">
-        <i class="fas fa-info-circle"></i>
-        <span id="toast-msg">Message</span>
-    </div>
+    <footer><div class="container"><p>&copy; 2025 ACI Motors Ltd.</p></div></footer>
+    <div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toast-msg">Message</span></div>
 
     <script>
-        // SCRIPT_URL: Google Apps Script Web App URL
-        // Updated deployment ID provided by user
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFUG8hgNL0Z4EgZCBW2be06AQ-t-Zmup2F51wnePdBAfySdV-N0xw2MKrReBEB3y0G2w/exec";
 
-        // Elements
         const tableBody = document.getElementById('table-body');
         const monthFilter = document.getElementById('month-filter');
         const officerFilter = document.getElementById('officer-filter');
@@ -957,7 +388,6 @@
         const toast = document.getElementById('toast');
         const toastMsg = document.getElementById('toast-msg');
         
-        // Stats Elements
         const totalCustomersEl = document.getElementById('total-customers');
         const totalBookedEl = document.getElementById('total-booked');
         const totalDeliveredEl = document.getElementById('total-delivered');
@@ -967,486 +397,235 @@
         
         const noDataMessage = document.getElementById('no-data-message');
         const errorPanel = document.getElementById('error-panel');
-        const errorMessage = document.getElementById('error-message');
         const retryButton = document.getElementById('retry-button');
         const clearFiltersBtn = document.getElementById('clear-filters');
 
         let allData = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            setupEventListeners();
-        });
+        document.addEventListener('DOMContentLoaded', () => { loadData(); setupEventListeners(); });
 
         async function loadData() {
-            showLoading(true);
-            hideNoDataMessage();
-            hideErrorPanel();
-            
+            showLoading(true); noDataMessage.style.display='none'; errorPanel.style.display='none';
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getData&t=${new Date().getTime()}`);
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-                
+                if (!response.ok) throw new Error(response.status);
                 const data = await response.json();
                 if (data.success && Array.isArray(data.data)) {
                     allData = data.data;
                     updateStats(allData);
                     renderTable(allData);
                     populateOfficerFilter(allData);
-                    
-                    if (allData.length === 0) showNoDataMessage();
-                } else {
-                    throw new Error(data.error || 'Invalid data');
-                }
+                    if (allData.length === 0) noDataMessage.style.display='block';
+                } else throw new Error(data.error || 'Invalid data');
             } catch (error) {
-                console.error('Error:', error);
-                showErrorPanel('Failed to load: ' + error.message);
-                showNoDataMessage();
-            } finally {
-                showLoading(false);
-            }
+                console.error(error); errorPanel.style.display='flex'; document.getElementById('error-message').textContent=error.message;
+            } finally { showLoading(false); }
         }
 
         function updateStats(data) {
             if (!data) return;
-            const VISIT_KEY = 'Visit Completed (Y/N)';
-            
             totalCustomersEl.textContent = data.length;
-            
-            // UPDATE: Only count as Booked if NOT Delivered
-            totalBookedEl.textContent = data.filter(i => 
-                i['Booking Info']?.toString().startsWith('BOOKED') && 
-                !i['Delivery Info']?.toString().startsWith('SOLD')
-            ).length;
-
-            totalDeliveredEl.textContent = data.filter(i => i['Delivery Info']?.toString().startsWith('SOLD')).length;
-            completedVisitsEl.textContent = data.filter(i => i[VISIT_KEY] === 'Yes').length;
-            pendingVisitsEl.textContent = data.filter(i => i[VISIT_KEY] !== 'Yes').length;
+            totalBookedEl.textContent = data.filter(i => i['Booking Info']?.startsWith('BOOKED') && !i['Delivery Info']?.startsWith('SOLD')).length;
+            totalDeliveredEl.textContent = data.filter(i => i['Delivery Info']?.startsWith('SOLD')).length;
+            completedVisitsEl.textContent = data.filter(i => i['Visit Completed (Y/N)'] === 'Yes').length;
+            pendingVisitsEl.textContent = data.filter(i => i['Visit Completed (Y/N)'] !== 'Yes').length;
             hotCustomersEl.textContent = data.filter(i => i['Customer Type'] === 'Hot').length;
+        }
+
+        function formatPhoneNumber(raw) {
+            if (!raw) return { display: 'N/A', clean: '' };
+            let str = String(raw).replace(/[^\d]/g, '');
+            if (str.length === 10 && str.startsWith('1')) str = '0' + str;
+            if (str.startsWith('880')) str = str.substring(2);
+            let display = str;
+            if (str.length === 11) display = str.replace(/(\d{5})(\d{6})/, '$1 $2');
+            return { display: display, clean: str };
         }
 
         function renderTable(data) {
             tableBody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                showNoDataMessage();
-                return;
-            }
+            if (!data || data.length === 0) { noDataMessage.style.display='block'; return; }
             
             data.forEach((row, index) => {
                 const tr = document.createElement('tr');
-                const hasOfficer = row['Officer Name'] && row['Officer Name'].trim() !== '';
-                const VISIT_KEY = 'Visit Completed (Y/N)';
-                const TYPE_KEY = 'Customer Type';
-                const NOTES_KEY = 'Field Visit Notes';
-
-                const isCompleted = row[VISIT_KEY] === 'Yes';
-                const hasAllData = isCompleted && row[TYPE_KEY] && row[NOTES_KEY];
+                const hasOfficer = row['Officer Name']?.trim();
+                const isCompleted = row['Visit Completed (Y/N)'] === 'Yes';
+                const hasAllData = isCompleted && row['Customer Type'] && row['Field Visit Notes'];
                 
                 if (hasAllData) tr.classList.add('submitted');
                 else if (hasOfficer && !isCompleted) tr.classList.add('not-visited');
                 
-                // Slight stagger for table rows
                 tr.style.opacity = '0';
                 tr.style.animation = `fadeSlideUp 0.3s ease-out forwards ${index * 0.03}s`;
 
-                // Logic for Short ID (First 3 digits + ..)
-                const fullId = String(row['Customer No'] || '');
-                const shortId = fullId.length > 3 ? fullId.substring(0, 3) + '..' : fullId;
+                const phoneObj = formatPhoneNumber(row['Customer No']);
 
                 tr.innerHTML = `
                     <td>${row['S.L.'] || ''}</td>
-                    <!-- Creative Expandable ID Badge -->
-                    <td style="overflow: visible;"> 
-                        <div class="id-badge" 
-                             data-full="${fullId}" 
-                             data-short="${shortId}"
-                             title="Click to view & copy">
-                            ${shortId}
+                    
+                    <!-- CREATIVE COMPACT PHONE PILL -->
+                    <td class="phone-cell"> 
+                        <div class="phone-pill-wrapper">
+                            <div class="phone-pill">
+                                <a href="tel:${phoneObj.clean}" class="call-link" title="Call">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                                <div class="phone-content">
+                                    <span class="phone-display" data-copy="${phoneObj.clean}">${phoneObj.display}</span>
+                                    <button class="copy-trigger" data-copy="${phoneObj.clean}" title="Copy">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </td>
+                    
                     <td>${row['Name'] || ''}</td>
                     <td>${formatDate(row['Date'])}</td>
                     <td>${row['Address'] || ''}</td>
                     <td>${row['Model'] || ''}</td>
                     <td>${row['Officer Name'] || ''}</td>
                     
-                    <!-- Visit Status (Space Saved) -->
                     <td>
-                        ${hasAllData ? 
-                        `<span class="badge badge-yes">Yes</span>` : 
-                        `<select class="input-inline visit-completed" data-customer="${row['Customer No']}">
-                            <option value="">-</option>
-                            <option value="Yes" ${row[VISIT_KEY] === 'Yes' ? 'selected' : ''}>Yes</option>
-                            <option value="No" ${row[VISIT_KEY] === 'No' ? 'selected' : ''}>No</option>
-                        </select>`
-                        }
+                        ${hasAllData ? `<span class="badge badge-yes">Yes</span>` : 
+                        `<select class="input-inline visit-completed" data-customer="${row['Customer No']}"><option value="">-</option><option value="Yes" ${row['Visit Completed (Y/N)']==='Yes'?'selected':''}>Yes</option><option value="No" ${row['Visit Completed (Y/N)']==='No'?'selected':''}>No</option></select>`}
                     </td>
                     
-                    <!-- Type (Space Saved) -->
                     <td>
-                        ${hasAllData ? 
-                        getCustomerTypeBadge(row[TYPE_KEY]) : 
-                        `<select class="input-inline customer-type" data-customer="${row['Customer No']}">
-                            <option value="">-</option>
-                            <option value="Hot" ${row[TYPE_KEY] === 'Hot' ? 'selected' : ''}>Hot</option>
-                            <option value="Warm" ${row[TYPE_KEY] === 'Warm' ? 'selected' : ''}>Warm</option>
-                            <option value="Cold" ${row[TYPE_KEY] === 'Cold' ? 'selected' : ''}>Cold</option>
-                        </select>`
-                        }
+                        ${hasAllData ? getCustomerTypeBadge(row['Customer Type']) : 
+                        `<select class="input-inline customer-type" data-customer="${row['Customer No']}"><option value="">-</option><option value="Hot" ${row['Customer Type']==='Hot'?'selected':''}>Hot</option><option value="Warm" ${row['Customer Type']==='Warm'?'selected':''}>Warm</option><option value="Cold" ${row['Customer Type']==='Cold'?'selected':''}>Cold</option></select>`}
                     </td>
                     
-                    <!-- Notes -->
                     <td>
-                        ${hasAllData ? 
-                        `<span style="color:var(--text-muted); font-size:0.8rem">${row[NOTES_KEY]}</span>` : 
-                        `<textarea class="input-inline field-notes auto-grow" data-customer="${row['Customer No']}" rows="1" placeholder="Add notes...">${row[NOTES_KEY] || ''}</textarea>`
-                        }
+                        ${hasAllData ? `<span style="color:var(--text-muted); font-size:0.8rem">${row['Field Visit Notes']}</span>` : 
+                        `<textarea class="input-inline field-notes auto-grow" data-customer="${row['Customer No']}" rows="1" placeholder="Notes...">${row['Field Visit Notes']||''}</textarea>`}
                     </td>
                     
-                    <!-- Actions -->
                     <td>
                         <div class="action-group">
                         ${getActionButtons(row)}
                         </div>
                     </td>
                 `;
-                
                 tableBody.appendChild(tr);
-                
-                // Trigger validation visual on load if partially filled
                 if(!hasAllData) validateRequiredFields(row['Customer No']);
             });
-            
-            hideNoDataMessage();
         }
 
         function getCustomerTypeBadge(type) {
             if (!type) return '-';
-            const lower = type.toLowerCase();
-            return `<span class="badge badge-${lower}">${type}</span>`;
+            return `<span class="badge badge-${type.toLowerCase()}">${type}</span>`;
         }
 
         function getActionButtons(row) {
-            const customerNo = row['Customer No'];
-            const officerName = row['Officer Name'];
-            const hasOfficer = officerName && officerName.trim() !== '';
+            const id = row['Customer No'];
+            const hasData = row['Visit Completed (Y/N)'] === 'Yes' && row['Customer Type'] && row['Field Visit Notes'];
+            const isDelivered = row['Delivery Info']?.startsWith('SOLD');
+            const isBooked = row['Booking Info']?.startsWith('BOOKED');
+            let h = '';
             
-            const VISIT_KEY = 'Visit Completed (Y/N)';
-            const TYPE_KEY = 'Customer Type';
-            const NOTES_KEY = 'Field Visit Notes';
-            const hasAllData = row[VISIT_KEY] === 'Yes' && row[TYPE_KEY] && row[NOTES_KEY];
+            if (hasData) h += `<span class="btn-ghost"><i class="fas fa-check"></i>Done</span>`;
+            else if (!row['Officer Name']?.trim()) h += `<span class="btn-ghost" style="opacity:0.5">Pending</span>`;
+            else h += `<button class="btn btn-primary submit-btn" data-customer="${id}">Submit</button>`;
 
-            const isDelivered = row['Delivery Info']?.toString().startsWith('SOLD');
-            const isBooked = row['Booking Info']?.toString().startsWith('BOOKED');
+            if (isBooked && !isDelivered) h += `<span class="btn-ghost" style="color:var(--info)"><i class="fas fa-bookmark"></i> Booked</span>`;
+            else if (hasData && !isDelivered) h += `<button class="btn btn-info book-btn" data-customer="${id}">Booked?</button>`;
 
-            let btns = '';
-
-            // Submit logic
-            if (hasAllData) {
-                btns += `<span class="btn-ghost"><i class="fas fa-check"></i>Done</span>`;
-            } else if (!hasOfficer) {
-                btns += `<span class="btn-ghost" style="opacity:0.5">Pending</span>`;
-            } else {
-                btns += `<button class="btn btn-primary submit-btn" data-customer="${customerNo}">Submit</button>`;
-            }
-
-            // Book logic
-            // UPDATE: Do not show Booked status if already Delivered
-            if (isBooked && !isDelivered) {
-                btns += `<span class="btn-ghost" style="color:var(--info)"><i class="fas fa-bookmark"></i> Booked</span>`;
-            } else if (hasAllData && !isDelivered) {
-                // Text changed to "Booked?"
-                btns += `<button class="btn btn-info book-btn" data-customer="${customerNo}">Booked?</button>`;
-            }
-
-            // Deliver logic
-            if (isDelivered) {
-                btns += `<span class="btn-ghost" style="color:var(--accent)"><i class="fas fa-truck"></i> Delivered</span>`;
-            } else if (hasAllData) {
-                // Text changed to "Delivered?"
-                btns += `<button class="btn btn-accent deliver-btn" data-customer="${customerNo}">Delivered?</button>`;
-            }
-
-            return btns;
+            if (isDelivered) h += `<span class="btn-ghost" style="color:var(--accent)"><i class="fas fa-truck"></i> Delivered</span>`;
+            else if (hasData) h += `<button class="btn btn-accent deliver-btn" data-customer="${id}">Delivered?</button>`;
+            
+            return h;
         }
 
         function populateOfficerFilter(data) {
-            if (!data) return;
-            const officers = [...new Set(data.map(r => r['Officer Name']).filter(n => n))];
+            const offs = [...new Set(data.map(r => r['Officer Name']).filter(n=>n))];
             officerFilter.innerHTML = '<option value="">All</option>';
-            officers.forEach(off => {
-                const opt = document.createElement('option');
-                opt.value = opt.textContent = off;
-                officerFilter.appendChild(opt);
-            });
+            offs.forEach(o => officerFilter.add(new Option(o, o)));
         }
 
         function setupEventListeners() {
-            [monthFilter, officerFilter, visitFilter, customerTypeFilter].forEach(el => 
-                el.addEventListener('change', filterTable)
-            );
+            [monthFilter, officerFilter, visitFilter, customerTypeFilter].forEach(el => el.addEventListener('change', filterTable));
+            retryButton.onclick = loadData;
+            clearFiltersBtn.onclick = () => { monthFilter.value=officerFilter.value=visitFilter.value=customerTypeFilter.value=''; filterTable(); };
             
-            retryButton.addEventListener('click', loadData);
-            clearFiltersBtn.addEventListener('click', () => {
-                monthFilter.value = '';
-                officerFilter.value = '';
-                visitFilter.value = '';
-                customerTypeFilter.value = '';
-                filterTable();
-            });
-            
-            // Global click listener to handle "Click Outside" to close IDs
-            document.addEventListener('click', (e) => {
-                // Close any open ID badges if clicked outside
-                if (!e.target.closest('.id-badge')) {
-                    document.querySelectorAll('.id-badge.expanded').forEach(badge => {
-                        badge.classList.remove('expanded');
-                        badge.textContent = badge.dataset.short;
-                    });
+            document.addEventListener('click', e => {
+                const cp = e.target.closest('[data-copy]');
+                if (cp) {
+                    const txt = cp.dataset.copy;
+                    const el = document.createElement('textarea'); el.value = txt; document.body.appendChild(el); el.select();
+                    try { document.execCommand('copy'); showToast('Copied', 'success'); } catch(e){}
+                    document.body.removeChild(el);
                 }
-            });
-
-            // Delegation for actions
-            document.addEventListener('click', (e) => {
                 if (e.target.closest('.submit-btn')) submitRow(e.target.closest('.submit-btn').dataset.customer);
                 if (e.target.closest('.book-btn')) markStatus(e.target.closest('.book-btn'), 'markBooked', 'Booking Info', 'BOOKED');
                 if (e.target.closest('.deliver-btn')) markStatus(e.target.closest('.deliver-btn'), 'markDelivered', 'Delivery Info', 'SOLD');
-                
-                // Creative ID Logic
-                const badge = e.target.closest('.id-badge');
-                if (badge) {
-                    const isExpanded = badge.classList.contains('expanded');
-                    
-                    // Close others first
-                    document.querySelectorAll('.id-badge.expanded').forEach(b => {
-                        b.classList.remove('expanded');
-                        b.textContent = b.dataset.short;
-                    });
-
-                    if (!isExpanded) {
-                        // Expand this one
-                        badge.classList.add('expanded');
-                        badge.textContent = badge.dataset.full; // Show full ID
-                        
-                        // Copy functionality (Fallback for iFrame restrictions)
-                        const textToCopy = badge.dataset.full;
-                        
-                        // Create temporary element
-                        const tempInput = document.createElement("textarea");
-                        tempInput.style.position = "fixed";
-                        tempInput.style.left = "-9999px";
-                        tempInput.style.top = "0";
-                        tempInput.value = textToCopy;
-                        document.body.appendChild(tempInput);
-                        
-                        tempInput.select();
-                        tempInput.setSelectionRange(0, 99999); /* For mobile devices */
-                        
-                        try {
-                           document.execCommand("copy");
-                           showToast('ID Copied: ' + textToCopy, 'success');
-                        } catch (err) {
-                           console.error("Copy failed", err);
-                           showToast('Manual copy required', 'error');
-                        }
-                        
-                        document.body.removeChild(tempInput);
-
-                    } else {
-                        // Collapse if already expanded (toggle behavior)
-                        badge.classList.remove('expanded');
-                        badge.textContent = badge.dataset.short;
-                    }
-                }
-            });
-
-            // Validation on input
-            document.addEventListener('input', (e) => {
-                if (e.target.matches('.visit-completed, .customer-type, .field-notes')) {
-                    validateRequiredFields(e.target.dataset.customer);
-                }
-                
-                // --- AUTO RESIZE LOGIC ---
-                if (e.target.matches('.auto-grow')) {
-                    e.target.style.height = 'auto';
-                    e.target.style.height = (e.target.scrollHeight) + 'px';
-                }
             });
             
-            // Also trigger resize on focus to ensure text fits if pre-filled
-            document.addEventListener('focusin', (e) => {
-                 if (e.target.matches('.auto-grow')) {
-                    e.target.style.height = 'auto';
-                    e.target.style.height = (e.target.scrollHeight) + 'px';
-                }
+            document.addEventListener('input', e => {
+                if (e.target.matches('.visit-completed, .customer-type, .field-notes')) validateRequiredFields(e.target.dataset.customer);
+                if (e.target.matches('.auto-grow')) { e.target.style.height='auto'; e.target.style.height=e.target.scrollHeight+'px'; }
             });
         }
 
-        function validateRequiredFields(customerNo) {
-            const row = document.querySelector(`tr:has([data-customer="${customerNo}"])`);
-            if (!row) return;
-            
-            const visit = row.querySelector('.visit-completed');
-            const type = row.querySelector('.customer-type');
-            const note = row.querySelector('.field-notes');
-            const btn = row.querySelector('.submit-btn');
-            
-            if (!visit || !type || !note || !btn) return;
-            
-            const isValid = visit.value && type.value && note.value;
-            btn.disabled = !isValid;
-            
-            [visit, type, note].forEach(el => {
-                if (!el.value) el.classList.add('input-error');
-                else el.classList.remove('input-error');
-            });
+        function validateRequiredFields(id) {
+            const r = document.querySelector(`tr:has([data-customer="${id}"])`);
+            if(!r) return;
+            const v=r.querySelector('.visit-completed'), t=r.querySelector('.customer-type'), n=r.querySelector('.field-notes'), b=r.querySelector('.submit-btn');
+            if(v&&t&&n&&b) {
+                const ok = v.value && t.value && n.value;
+                b.disabled = !ok;
+                [v,t,n].forEach(e => e.classList.toggle('input-error', !e.value));
+            }
         }
 
         function filterTable() {
-            const m = monthFilter.value; // Format: "YYYY-MM"
-            const o = officerFilter.value;
-            const v = visitFilter.value;
-            const t = customerTypeFilter.value;
-            const VISIT_KEY = 'Visit Completed (Y/N)';
-
-            try {
-                const filtered = allData.filter(row => {
-                    // --- 1. Robust Month Filter Fix ---
-                    if (m) {
-                        if (!row['Date']) return false;
-                        
-                        // Create Date object
-                        const d = new Date(row['Date']);
-                        
-                        // If invalid date string, exclude it safely (prevents crash)
-                        if (isNaN(d.getTime())) return false; 
-                        
-                        // Extract year and month manually from local time
-                        // This avoids Timezone issues where "2023-11-01" becomes "2023-10-31" in UTC
-                        const year = d.getFullYear();
-                        const month = String(d.getMonth() + 1).padStart(2, '0'); // getMonth is 0-indexed
-                        const rowMonth = `${year}-${month}`;
-                        
-                        if (rowMonth !== m) return false;
-                    }
-                    // -----------------------------------
-
-                    if (o && row['Officer Name'] !== o) return false;
-                    if (v && row[VISIT_KEY] !== v) return false;
-                    if (t && row['Customer Type'] !== t) return false;
-                    return true;
-                });
-                
-                renderTable(filtered);
-            } catch (error) {
-                console.error("Filter error:", error);
-                // Fallback: If filter crashes, show empty table or original data to avoid freezing
-                // renderTable(allData); 
-            }
+            const m=monthFilter.value, o=officerFilter.value, v=visitFilter.value, t=customerTypeFilter.value;
+            const res = allData.filter(r => {
+                if(m && (!r['Date'] || new Date(r['Date']).toISOString().slice(0,7)!==m)) return 0;
+                if(o && r['Officer Name']!==o) return 0;
+                if(v && r['Visit Completed (Y/N)']!==v) return 0;
+                if(t && r['Customer Type']!==t) return 0;
+                return 1;
+            });
+            renderTable(res); updateStats(res);
         }
 
-        async function submitRow(customerNo) {
-            const visit = document.querySelector(`.visit-completed[data-customer="${customerNo}"]`).value;
-            const type = document.querySelector(`.customer-type[data-customer="${customerNo}"]`).value;
-            const note = document.querySelector(`.field-notes[data-customer="${customerNo}"]`).value;
+        async function submitRow(id) {
+            const v=document.querySelector(`.visit-completed[data-customer="${id}"]`).value;
+            const t=document.querySelector(`.customer-type[data-customer="${id}"]`).value;
+            const n=document.querySelector(`.field-notes[data-customer="${id}"]`).value;
+            if(!v||!t||!n) return showToast('Fill all fields', 'error');
             
-            if (!visit || !type || !note) {
-                showToast('Please fill all fields', 'error');
-                return;
-            }
-
-            const btn = document.querySelector(`.submit-btn[data-customer="${customerNo}"]`);
-            const prevText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-            btn.disabled = true;
-
+            const b = document.querySelector(`.submit-btn[data-customer="${id}"]`);
+            const old = b.innerHTML; b.innerHTML='...'; b.disabled=1;
+            
             try {
-                const params = new URLSearchParams({
-                    action: 'updateRow',
-                    customerNo: customerNo,
-                    'Visit Completed (Y/N)': visit,
-                    'Customer Type': type,
-                    'Field Visit Notes': note
-                });
-
-                const res = await fetch(SCRIPT_URL, {
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
-                    body: params
-                });
-                
-                const data = await res.json();
-                if (!data.success) throw new Error(data.error);
-
-                showToast('Visit Submitted!', 'success');
-                
-                // Update local state
-                const row = allData.find(r => r['Customer No'] === customerNo);
-                if (row) {
-                    row['Visit Completed (Y/N)'] = visit;
-                    row['Customer Type'] = type;
-                    row['Field Visit Notes'] = note;
-                }
-                updateStats(allData);
-                filterTable(); // Re-render to show readonly state
-
-            } catch (err) {
-                console.error(err);
-                showToast('Failed to submit', 'error');
-                btn.innerHTML = prevText;
-                btn.disabled = false;
-            }
+                const res = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({action:'updateRow', customerNo:id, 'Visit Completed (Y/N)':v, 'Customer Type':t, 'Field Visit Notes':n})});
+                const d = await res.json();
+                if(!d.success) throw new Error(d.error);
+                showToast('Saved', 'success');
+                const row = allData.find(r=>r['Customer No']===id);
+                if(row) { row['Visit Completed (Y/N)']=v; row['Customer Type']=t; row['Field Visit Notes']=n; }
+                updateStats(allData); filterTable();
+            } catch(e) { console.error(e); showToast('Failed', 'error'); b.innerHTML=old; b.disabled=0; }
         }
 
-        async function markStatus(btn, action, field, prefix) {
-            const customerNo = btn.dataset.customer;
-            const prevText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-            btn.disabled = true;
-
+        async function markStatus(b, act, f, pre) {
+            const id = b.dataset.customer; const old=b.innerHTML; b.innerHTML='...'; b.disabled=1;
             try {
-                const res = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({ action, customerNo })
-                });
-                
-                const data = await res.json();   
-              if (!data.success) throw new Error(data.error);
-                
-                showToast('Status Updated!', 'success');
-                const row = allData.find(r => r['Customer No'] === customerNo);
-                if (row) row[field] = `${prefix} - ${new Date().toISOString()}`;
-                
-                updateStats(allData);
-                filterTable();
-
-            } catch (err) {
-                console.error(err);
-                showToast('Failed to update', 'error');
-                btn.innerHTML = prevText;
-                btn.disabled = false;
-            }
+                const res = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({action:act, customerNo:id})});
+                const d = await res.json();
+                if(!d.success) throw new Error(d.error);
+                showToast('Updated', 'success');
+                const row = allData.find(r=>r['Customer No']===id);
+                if(row) row[f]=pre;
+                updateStats(allData); filterTable();
+            } catch(e) { console.error(e); showToast('Failed', 'error'); b.innerHTML=old; b.disabled=0; }
         }
 
-        function formatDate(str) {
-            if (!str) return '-';
-            const d = new Date(str);
-            return isNaN(d) ? str : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
-        }
-
-        function showLoading(b) { loadingIndicator.style.display = b ? 'flex' : 'none'; }
-        function showNoDataMessage() { noDataMessage.style.display = 'block'; document.querySelector('.table-wrapper').style.display = 'none'; }
-        function hideNoDataMessage() { noDataMessage.style.display = 'none'; document.querySelector('.table-wrapper').style.display = 'block'; }
-        function showErrorPanel(msg) { errorMessage.textContent = msg; errorPanel.style.display = 'flex'; }
-        function hideErrorPanel() { errorPanel.style.display = 'none'; }
-        
-        function showToast(msg, type) {
-            toastMsg.textContent = msg;   
-          toast.className = `toast show ${type}`;
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+        function formatDate(s) { if(!s) return '-'; const d=new Date(s); return isNaN(d)?s:d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'2-digit'}); }
+        function showLoading(b) { loadingIndicator.style.display = b?'flex':'none'; }
+        function showToast(m, t) { toastMsg.textContent=m; toast.className=`toast show ${t}`; setTimeout(()=>toast.classList.remove('show'),3000); }
     </script>
 </body>
 </html>
