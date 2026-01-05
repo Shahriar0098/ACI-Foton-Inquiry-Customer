@@ -72,7 +72,6 @@
         }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 10px; }
-        /* Removed .logo-icon styles as they are no longer needed */
         .logo-text h1 { font-size: 1.1rem; font-weight: 700; color: #15803d; }
         .logo-text p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
         .user-pill {
@@ -579,13 +578,31 @@
         }
 
         function filterTable() {
-            const m=monthFilter.value, o=officerFilter.value, v=visitFilter.value, t=customerTypeFilter.value;
+            const m = monthFilter.value;
+            const o = officerFilter.value;
+            const v = visitFilter.value;
+            const t = customerTypeFilter.value;
+
             const res = allData.filter(r => {
-                if(m && (!r['Date'] || new Date(r['Date']).toISOString().slice(0,7)!==m)) return 0;
-                if(o && r['Officer Name']!==o) return 0;
-                if(v && r['Visit Completed (Y/N)']!==v) return 0;
-                if(t && r['Customer Type']!==t) return 0;
-                return 1;
+                // Filter by Month
+                if (m) {
+                    if (!r['Date']) return false;
+                    const d = new Date(r['Date']);
+                    if (isNaN(d.getTime())) return false; // Handle invalid dates safely
+                    
+                    // Use local date components (YYYY-MM) to avoid timezone shifts
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const rowMonth = `${year}-${month}`;
+                    
+                    if (rowMonth !== m) return false;
+                }
+
+                if(o && r['Officer Name']!==o) return false;
+                if(v && r['Visit Completed (Y/N)']!==v) return false;
+                if(t && r['Customer Type']!==t) return false;
+                
+                return true;
             });
             renderTable(res); updateStats(res);
         }
